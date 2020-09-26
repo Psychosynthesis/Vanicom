@@ -15,15 +15,7 @@ var COOKIE_LIFETIME = 432000000; // Время жизни куки в милли
 /////////////////////////////////////////////////////////////////////////////////////////
 // Базовые функции, общие для всех систем
 /////////////////////////////////////////////////////////////////////////////////////////
-function trim(s){ return s.replace(/^\s+|\s+$/g, ''); };
-/*
-Ещё вариант trim -
-function trim(str) {
-	var chars = '\\s\\xA0';
-	return (str + '').replace(new RegExp('^['+chars+']+|['+chars+']+$', 'g'), '');
-}
-*/
-
+function trim(str) { return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); }; // Вырезаем BOM и неразрывный пробел
 function regExp(name){ return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
 function forEach(list, fn, scope){ for (var i = 0; i < list.length; i++){ fn.call(scope, list[i]); } };
 function isString(variable){ if (typeof(variable) !== "string"){ return false; } else { return true; } };
@@ -51,6 +43,16 @@ function setCookie(name, value) {
     var expiration_date = new Date(new Date().getTime() + COOKIE_LIFETIME);
     var cookie_string = name + "=" + value + "; expires=" + expiration_date.toUTCString() + "; path=/;";
     document.cookie = cookie_string;
+}
+
+function getRandomString(length) {
+	var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
+	var lolRandomString = alphabet[getRandomIntInGap(0, alphabet.length)];
+	for (var i = 0; i < length-1; i++) {
+		if ((getRandomIntInGap(0, 1000) % 2) == 0) { lolRandomString += getRandomIntInGap(0, 9); }
+		else { lolRandomString += alphabet[getRandomIntInGap(0, alphabet.length)]; }
+	}
+	return lolRandomString;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +86,13 @@ function setCookie(name, value) {
             }
         });
     }
+
+	// Полифилл для String.trim
+	if (!String.prototype.trim) {
+		(function() {
+			String.prototype.trim = function() { return trim(this); };
+		})();
+	}
 
     // Полифилл для Element.closest()
     (function(e){
