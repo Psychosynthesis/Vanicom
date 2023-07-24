@@ -1,6 +1,6 @@
 {
   "name": "vanicom",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
   "scripts": {
@@ -21,7 +21,6 @@
     "@babel/cli": "^7.22.9",
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
-    "babel-preset-minify": "^0.5.2",
-    "np": "^8.0.4"
+    "babel-preset-minify": "^0.5.2"
   }
 }

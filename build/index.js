@@ -3,7 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.regExp = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getRandomInGap = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
+exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.regExp = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
+var _arguments = typeof arguments === "undefined" ? void 0 : arguments;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -11,44 +12,8 @@ exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie 
 // https://github.com/Psychosynthesis/Vanicom
 /////////////////////////////////////////////////////////////////////////////////////////
 
-var trim = function trim(str) {
-  return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-}; // Вырезаем BOM и неразрывный пробел
-exports.trim = trim;
-var trimAllSpaces = function trimAllSpaces(str) {
-  return str.replace(/\s+/g, '');
-}; // Тестировать, проверить разницу между trim и trimAllSpaces
-exports.trimAllSpaces = trimAllSpaces;
-var capz = function capz(str) {
-  if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-exports.capz = capz;
-var logg = console.log; // Просто для удобства
+var logg = console.log; // :)
 exports.logg = logg;
-var getRandomString = function getRandomString(length) {
-  var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
-  var lol_random = alphabet[getRandomInGap(0, alphabet.length)];
-  for (var i = 0; i < length - 1; i++) {
-    if (getRandomInGap(0, 1000) % 2 == 0) {
-      lol_random += getRandomInGap(0, 9);
-    } else {
-      lol_random += alphabet[getRandomInGap(0, alphabet.length)];
-    }
-  }
-  return lol_random;
-};
-exports.getRandomString = getRandomString;
-var regExp = function regExp(name) {
-  return new RegExp('(^|\\s+)' + name + '(\\s+|$)');
-};
-exports.regExp = regExp;
-var forEach = function forEach(list, fn, scope) {
-  for (var i = 0; i < list.length; i++) {
-    fn.call(scope, list[i]);
-  }
-};
-exports.forEach = forEach;
 var isString = function isString(variable) {
   return typeof variable === "string";
 };
@@ -64,13 +29,53 @@ var isExistAndNotNull = function isExistAndNotNull(val) {
 };
 exports.isExistAndNotNull = isExistAndNotNull;
 var getRandomNum = function getRandomNum() {
-  return Math.floor(Math.random() * 10000000);
-};
-exports.getRandomNum = getRandomNum;
-var getRandomInGap = function getRandomInGap(min, max) {
+  var min = 0;
+  var max = 10000000;
+  if (_arguments.length >= 1) {
+    min = _arguments[0];
+  }
+  if (_arguments.length == 2) {
+    max = _arguments[1];
+  }
   return Math.floor(Math.random() * (max - min) + min);
 };
-exports.getRandomInGap = getRandomInGap;
+exports.getRandomNum = getRandomNum;
+var regExp = function regExp(name) {
+  return new RegExp('(^|\\s+)' + name + '(\\s+|$)');
+};
+exports.regExp = regExp;
+var forEach = function forEach(list, fn, scope) {
+  for (var i = 0; i < list.length; i++) {
+    fn.call(scope, list[i]);
+  }
+};
+exports.forEach = forEach;
+var trim = function trim(str) {
+  return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+}; // Вырезаем BOM и неразрывный пробел
+exports.trim = trim;
+var trimAllSpaces = function trimAllSpaces(str) {
+  return str.replace(/\s+/g, '');
+}; // Тестировать, проверить разницу между trim и trimAllSpaces
+exports.trimAllSpaces = trimAllSpaces;
+var capz = function capz(str) {
+  if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+exports.capz = capz;
+var getRandomString = function getRandomString(length) {
+  var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
+  var lol_random = alphabet[getRandomNum(0, alphabet.length)];
+  for (var i = 0; i < length - 1; i++) {
+    if (getRandomNum(0, 1000) % 2 == 0) {
+      lol_random += getRandomNum(0, 9);
+    } else {
+      lol_random += alphabet[getRandomNum(0, alphabet.length)];
+    }
+  }
+  return lol_random;
+};
+exports.getRandomString = getRandomString;
 var deleteNode = function deleteNode(node_to_delete) {
   if (node_to_delete) {
     node_to_delete.parentNode.removeChild(node_to_delete);
@@ -92,7 +97,7 @@ var getCookie = function getCookie(name) {
     if (offset > -1) {
       offset += search.length;
       end = cookie.indexOf(";", offset);
-      if (end == -1) {
+      if (end === -1) {
         end = cookie.length;
       }
       wanted_cookie = unescape(cookie.substring(offset, end));
@@ -109,9 +114,8 @@ exports.setCookie = setCookie;
 var setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
   var now = new Date();
-  // The item is the object that holds the original value
-  // as well as the expiration date.
   var item = {
+    // Объект-обёртка для хранимого значения
     value: value,
     expiry: now.getTime() + exp // exp - время до истечения действия ключа
   };

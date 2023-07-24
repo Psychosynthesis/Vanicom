@@ -5,30 +5,7 @@
 // https://github.com/Psychosynthesis/Vanicom
 /////////////////////////////////////////////////////////////////////////////////////////
 
-export const trim = (str) => { return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); }; // Вырезаем BOM и неразрывный пробел
-
-export const trimAllSpaces = (str) => { return str.replace(/\s+/g, ''); }; // Тестировать, проверить разницу между trim и trimAllSpaces
-
-export const capz = (str) => {
-  if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
-export const logg = console.log; // Просто для удобства
-
-export const getRandomString = (length) => {
-	const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
-	let lol_random = alphabet[getRandomInGap(0, alphabet.length)];
-	for (let i = 0; i < length-1; i++) {
-		if ((getRandomInGap(0, 1000) % 2) == 0) { lol_random += getRandomInGap(0, 9); }
-		else { lol_random += alphabet[getRandomInGap(0, alphabet.length)]; }
-	}
-	return lol_random;
-};
-
-export const regExp = (name) => { return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
-
-export const forEach = (list, fn, scope) => { for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); } };
+export const logg = console.log; // :)
 
 export const isString = (variable) => { return (typeof(variable) === "string"); };
 
@@ -40,9 +17,35 @@ export const isObject = (value) => {
 
 export const isExistAndNotNull = (val) => { return !((typeof(val) === "undefined") || (val == null)); };
 
-export const getRandomNum = () => { return Math.floor(Math.random() * (10000000)); };
+export const getRandomNum = () => {
+  let min = 0;
+  let max = 10000000;
+  if (arguments.length >= 1) { min = arguments[0]; }
+  if (arguments.length == 2) { max = arguments[1]; }
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
-export const getRandomInGap = (min, max) => { return Math.floor(Math.random() * (max - min) + min); };
+export const regExp = (name) => { return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
+
+export const forEach = (list, fn, scope) => { for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); } };
+
+export const trim = (str) => { return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); }; // Вырезаем BOM и неразрывный пробел
+export const trimAllSpaces = (str) => { return str.replace(/\s+/g, ''); }; // Тестировать, проверить разницу между trim и trimAllSpaces
+
+export const capz = (str) => {
+  if (typeof(str) !== "string") throw new Error("Input for capitalize must be a String!");
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const getRandomString = (length) => {
+	const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
+	let lol_random = alphabet[getRandomNum(0, alphabet.length)];
+	for (let i = 0; i < length-1; i++) {
+		if ((getRandomNum(0, 1000) % 2) == 0) { lol_random += getRandomNum(0, 9); }
+		else { lol_random += alphabet[getRandomNum(0, alphabet.length)]; }
+	}
+	return lol_random;
+};
 
 export const deleteNode = (node_to_delete) => { if (node_to_delete){ node_to_delete.parentNode.removeChild(node_to_delete); } };
 
@@ -59,7 +62,7 @@ export const getCookie = (name) => {
       if (offset > -1) {
           offset += search.length;
           end = cookie.indexOf(";", offset);
-          if (end == -1) { end = cookie.length; }
+          if (end === -1) { end = cookie.length; }
           wanted_cookie = unescape(cookie.substring(offset, end));
       }
   }
@@ -73,9 +76,7 @@ export const setCookie = (name, value, lifetime) => {
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.
   const now = new Date();
-  // The item is the object that holds the original value
-  // as well as the expiration date.
-  const item = {
+  const item = { // Объект-обёртка для хранимого значения
     value,
     expiry: now.getTime() + exp, // exp - время до истечения действия ключа
   };
