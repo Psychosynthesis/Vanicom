@@ -1,0 +1,27 @@
+{
+  "name": "vanicom",
+  "version": "1.0.0",
+  "description": "Most used vanilla js features for simple interfaces",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"No test specified\"",
+    "build": "node scripts/clean.js && node scripts/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Psychosynthesis/Vanicom.git"
+  },
+  "author": "Nick",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Psychosynthesis/Vanicom/issues"
+  },
+  "homepage": "https://github.com/Psychosynthesis/Vanicom#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.22.9",
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "babel-preset-minify": "^0.5.2",
+    "np": "^8.0.4"
+  }
+}
