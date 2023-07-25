@@ -17,17 +17,20 @@ export const isObject = (value) => {
 
 export const isExistAndNotNull = (val) => { return !((typeof(val) === "undefined") || (val == null)); };
 
-export const getRandomNum = () => {
-  let min = 0;
-  let max = 10000000;
-  if (arguments.length >= 1) { min = arguments[0]; }
-  if (arguments.length == 2) { max = arguments[1]; }
+export const getRandomNum = function() { // Must be a not an arrow function to use arguments object
+  const min = (arguments.length >= 1) ? arguments[0] : 0;
+  const max = (arguments.length == 2) ? arguments[1] : 100000000;
+	if (min > max) { throw new Error("First params describe a minimum and it must be smaller than " + max + ". If you need a bigger number use second argument"); }
   return Math.floor(Math.random() * (max - min) + min);
 };
 
 export const regExp = (name) => { return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
 
-export const forEach = (list, fn, scope) => { for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); } };
+export const forEach = (list, fn, scope) => {
+	if (!Array.isArray(list)) { throw new Error("First argument must be an array"); };
+	if (!fn || typeof(fn) !== 'function') { throw new Error("Second argument must be a function"); };
+	for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); }
+};
 
 export const trim = (str) => { return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); }; // Вырезаем BOM и неразрывный пробел
 export const trimAllSpaces = (str) => { return str.replace(/\s+/g, ''); }; // Тестировать, проверить разницу между trim и trimAllSpaces
@@ -76,11 +79,7 @@ export const setCookie = (name, value, lifetime) => {
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.
   const now = new Date();
-  const item = { // Объект-обёртка для хранимого значения
-    value,
-    expiry: now.getTime() + exp, // exp - время до истечения действия ключа
-  };
-
+  const item = { value, expiry: now.getTime() + exp }; // exp - время до истечения действия ключа
   localStorage.setItem(key, JSON.stringify(item));
 };
 

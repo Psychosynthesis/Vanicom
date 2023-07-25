@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.regExp = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
-var _arguments = typeof arguments === "undefined" ? void 0 : arguments;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -29,13 +28,11 @@ var isExistAndNotNull = function isExistAndNotNull(val) {
 };
 exports.isExistAndNotNull = isExistAndNotNull;
 var getRandomNum = function getRandomNum() {
-  var min = 0;
-  var max = 10000000;
-  if (_arguments.length >= 1) {
-    min = _arguments[0];
-  }
-  if (_arguments.length == 2) {
-    max = _arguments[1];
+  // Must be a not an arrow function to use arguments object
+  var min = arguments.length >= 1 ? arguments[0] : 0;
+  var max = arguments.length == 2 ? arguments[1] : 100000000;
+  if (min > max) {
+    throw new Error("First params describe a minimum and it must be smaller than " + max + ". If you need a bigger number use second argument");
   }
   return Math.floor(Math.random() * (max - min) + min);
 };
@@ -45,6 +42,14 @@ var regExp = function regExp(name) {
 };
 exports.regExp = regExp;
 var forEach = function forEach(list, fn, scope) {
+  if (!Array.isArray(list)) {
+    throw new Error("First argument must be an array");
+  }
+  ;
+  if (!fn || typeof fn !== 'function') {
+    throw new Error("Second argument must be a function");
+  }
+  ;
   for (var i = 0; i < list.length; i++) {
     fn.call(scope, list[i]);
   }
@@ -115,11 +120,9 @@ var setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
   var now = new Date();
   var item = {
-    // Объект-обёртка для хранимого значения
     value: value,
-    expiry: now.getTime() + exp // exp - время до истечения действия ключа
-  };
-
+    expiry: now.getTime() + exp
+  }; // exp - время до истечения действия ключа
   localStorage.setItem(key, JSON.stringify(item));
 };
 exports.setLocalItem = setLocalItem;

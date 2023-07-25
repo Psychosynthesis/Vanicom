@@ -7,6 +7,4 @@ module.exports = {
 	MagentaColor: "\x1b[35m",
 	CyanColor: "\x1b[36m",
 	WhiteColor: "\x1b[37m",
-
-	singleCalc: "\x1b[34m",
 };

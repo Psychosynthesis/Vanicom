@@ -1,10 +1,10 @@
 {
   "name": "vanicom",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"No test specified\"",
+    "test": "mocha",
     "build": "node scripts/clean.js && node scripts/build.js"
   },
   "repository": {
@@ -21,6 +21,7 @@
     "@babel/cli": "^7.22.9",
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
-    "babel-preset-minify": "^0.5.2"
+    "babel-preset-minify": "^0.5.2",
+    "mocha": "^10.2.0"
   }
 }
