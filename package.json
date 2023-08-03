@@ -1,6 +1,6 @@
 {
   "name": "vanicom",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
   "scripts": {

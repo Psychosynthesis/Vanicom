@@ -5,3 +5,7 @@
 /.remote-sync.json
 
 .editorconfig
+
+/scripts/
+/test/
+babel.config.js
