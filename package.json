@@ -11,6 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/Psychosynthesis/Vanicom.git"
   },
+  "keywords": [
+    "vanillajs",
+    "helper",
+    "vanicom"
+  ],
   "author": "Nick",
   "license": "MIT",
   "bugs": {
