@@ -1,5 +1,5 @@
 # Vanicom.js
-[![npm version](https://img.shields.io/npm/v/vanicom?color=%23047dec)](https://www.npmjs.org/package/mvanicom)
+[![npm version](https://img.shields.io/npm/v/vanicom?color=%23047dec)](https://www.npmjs.org/package/vanicom)
 
 
 ## Introductory
