@@ -1,11 +1,11 @@
 {
   "name": "vanicom",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
   "scripts": {
     "test": "mocha",
-    "build": "node scripts/clean.js && node scripts/build.js"
+    "build": "node scripts/clean.js && node scripts/build.js && npm test"
   },
   "repository": {
     "type": "git",

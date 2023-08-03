@@ -10,10 +10,8 @@ module.exports = api => {
     !needMinimize && ["@babel/preset-env", { // Доки preset-env: https://babeljs.io/docs/babel-preset-env
       "bugfixes": true,
       "exclude": [ "@babel/plugin-transform-typeof-symbol"], // Убираем баг с повторяющимся typeof
-      "targets": { "ie": "8" },
+      "targets": { "ie": "9" },
       "modules": needMinimize ? false : "auto", // Минифицируется только уже скомпилированные файлы без поддержки модулей
-      "useBuiltIns": "entry",
-      "corejs": "3.6.5"
     }],
     needMinimize && ["minify", { "keepFnName": true }], // Настройки минификации: https://babeljs.io/docs/babel-preset-minify
   ].filter(Boolean); // this will filter any falsy plugins (such as removing react-remove-properties when not in production);

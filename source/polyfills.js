@@ -50,8 +50,14 @@
     // Полифилл для Class list object с основными методами для IE8/9, Safari.
     function ClassList(element){ this.element = element; }
     ClassList.prototype = {
-        add: function(){ forEach(arguments, function(name) { if (!this.contains(name)){ this.element.className = trim(this.element.className +' '+ name); } }, this); },
-        remove: function(){ forEach(arguments, function(name){ this.element.className = trim(this.element.className.replace(regExp(name), ' ')); }, this); },
+        add: function(){
+          var addArgs = Array.prototype.slice.call(arguments);
+          forEach(addArgs.sort(), function(name) { if (!this.contains(name)){ this.element.className = trim(this.element.className +' '+ name); } }, this);
+        },
+        remove: function(){
+          var removeArgs = Array.prototype.slice.call(arguments);
+          forEach(removeArgs.sort(), function(name){ this.element.className = trim(this.element.className.replace(regExp(name), ' ')); }, this);
+        },
         toggle: function(name){ return this.contains(name) ? (this.remove(name), false) : (this.add(name), true); },
         contains: function(name){ return regExp(name).test(this.element.className); },
         item: function(i){ return this.element.className.split(/\s+/)[i] || null; },

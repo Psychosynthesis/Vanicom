@@ -54,14 +54,26 @@ var forEach = function forEach(list, fn, scope) {
     fn.call(scope, list[i]);
   }
 };
+
+// Вырезаем BOM и любые скрытые пробелы из начала и конца строки
 exports.forEach = forEach;
 var trim = function trim(str) {
-  return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-}; // Вырезаем BOM и неразрывный пробел
+  if (typeof str !== 'string') {
+    throw new Error("Trim work only for strings");
+  }
+  ;
+  return str.replace(/^[\s\uFEFF\u2000-\u200f]+|[\s\uFEFF\u2000-\u200f]+$/g, '');
+};
+
+// Вырезаем вообще все лишние пробелы
 exports.trim = trim;
 var trimAllSpaces = function trimAllSpaces(str) {
-  return str.replace(/\s+/g, '');
-}; // Тестировать, проверить разницу между trim и trimAllSpaces
+  if (typeof str !== 'string') {
+    throw new Error("Trim work only for strings");
+  }
+  ;
+  return str.replace(/[\s\uFEFF\u2000-\u200f]/g, '');
+};
 exports.trimAllSpaces = trimAllSpaces;
 var capz = function capz(str) {
   if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
@@ -69,9 +81,11 @@ var capz = function capz(str) {
 };
 exports.capz = capz;
 var getRandomString = function getRandomString(length) {
+  if (length && typeof length !== "number") throw new Error("The length of the string, if specified, must be a positive number!");
+  var lengthToGenerate = length ? length : 5;
   var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
   var lol_random = alphabet[getRandomNum(0, alphabet.length)];
-  for (var i = 0; i < length - 1; i++) {
+  for (var i = 0; i < lengthToGenerate - 1; i++) {
     if (getRandomNum(0, 1000) % 2 == 0) {
       lol_random += getRandomNum(0, 9);
     } else {
@@ -118,11 +132,10 @@ var setCookie = function setCookie(name, value, lifetime) {
 exports.setCookie = setCookie;
 var setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
-  var now = new Date();
   var item = {
     value: value,
-    expiry: now.getTime() + exp
-  }; // exp - время до истечения действия ключа
+    expiry: Date.now() + exp
+  }; // exp - сколько времени ключ будет валиден в мс
   localStorage.setItem(key, JSON.stringify(item));
 };
 exports.setLocalItem = setLocalItem;

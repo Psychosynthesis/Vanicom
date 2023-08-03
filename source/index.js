@@ -32,8 +32,17 @@ export const forEach = (list, fn, scope) => {
 	for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); }
 };
 
-export const trim = (str) => { return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, ''); }; // Вырезаем BOM и неразрывный пробел
-export const trimAllSpaces = (str) => { return str.replace(/\s+/g, ''); }; // Тестировать, проверить разницу между trim и trimAllSpaces
+ // Вырезаем BOM и любые скрытые пробелы из начала и конца строки
+export const trim = (str) => {
+	if (typeof(str) !== 'string') { throw new Error("Trim work only for strings"); };
+	return str.replace(/^[\s\uFEFF\u2000-\u200f]+|[\s\uFEFF\u2000-\u200f]+$/g, '');
+};
+
+ // Вырезаем вообще все лишние пробелы
+export const trimAllSpaces = (str) => {
+	if (typeof(str) !== 'string') { throw new Error("Trim work only for strings"); };
+	return str.replace(/[\s\uFEFF\u2000-\u200f]/g, '');
+};
 
 export const capz = (str) => {
   if (typeof(str) !== "string") throw new Error("Input for capitalize must be a String!");
@@ -41,9 +50,11 @@ export const capz = (str) => {
 };
 
 export const getRandomString = (length) => {
+	if (length && typeof(length) !== "number") throw new Error("The length of the string, if specified, must be a positive number!");
+	const lengthToGenerate = length ? length : 5;
 	const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
 	let lol_random = alphabet[getRandomNum(0, alphabet.length)];
-	for (let i = 0; i < length-1; i++) {
+	for (let i = 0; i < lengthToGenerate-1; i++) {
 		if ((getRandomNum(0, 1000) % 2) == 0) { lol_random += getRandomNum(0, 9); }
 		else { lol_random += alphabet[getRandomNum(0, alphabet.length)]; }
 	}
@@ -78,8 +89,7 @@ export const setCookie = (name, value, lifetime) => {
 };
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.
-  const now = new Date();
-  const item = { value, expiry: now.getTime() + exp }; // exp - время до истечения действия ключа
+  const item = { value, expiry: Date.now() + exp }; // exp - сколько времени ключ будет валиден в мс
   localStorage.setItem(key, JSON.stringify(item));
 };
 

@@ -4,7 +4,6 @@ const colors = require("./colors.js");
 
 const isWin = process.platform === "win32";
 
-// Вариант команды для обработки нескольких файлов:
 const buildAllCom = "babel ./source --out-dir ./build --copy-files --extensions \".js,.jsx\" --source-maps false";
 const minifyBuildCom = "babel ./build/prebuild.js --out-file ./build/vanicom.min.js --source-maps false";
 

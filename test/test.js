@@ -56,7 +56,7 @@ describe('isObject testing', () => {
 
   describe('Test on null', function () {
     it('should return false when passing a null-value', function () {
-      assert.equal(Vanic.isString(null), false);
+      assert.equal(Vanic.isObject(null), false);
     });
   });
 });
@@ -144,6 +144,13 @@ describe('getRandomNum testing', () => {
       assert.ok(rndmInGap <= 10000);
     });
   });
+
+  describe('Get not random in gap, lol', function() {
+    it('should return number equal for first and second arg', function () {
+      const notRndmInGap = Vanic.getRandomNum(9000, 9000);
+      assert.ok(notRndmInGap == 9000);
+    });
+  });
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -176,6 +183,113 @@ describe('forEach testing', () => {
       } catch(error) {
         assert.strictEqual(error.message, "Second argument must be a function");
       }
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('getRandomString testing', () => {
+  describe('Get random string', function () {
+    it('should return some random string with length 5 when run without args', function () {
+      assert.equal(typeof(Vanic.getRandomString()), "string");
+      assert.ok(Vanic.getRandomString().length === 5);
+    });
+  });
+
+  describe('Get random string with length', function () {
+    it('should return string with length 5', function () {
+      assert.ok(Vanic.getRandomString(5).length === 5);
+    });
+  });
+
+  describe('Try get random string and send zero length', function () {
+    it('should return string with length 5', function () {
+      assert.ok(Vanic.getRandomString(0).length === 5);
+    });
+  });
+
+  describe('Try get random string with inccorrect args', function () {
+    it('should throw an error with the message "The length of the string..."', function() {
+      try {
+        Vanic.getRandomString('0');
+      } catch(error) {
+        assert.strictEqual(error.message, "The length of the string, if specified, must be a positive number!");
+      }
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('trim testing', () => {
+  describe('Simple trim string', function () {
+    it('should return trimmed string without spaces around', function () {
+      assert.equal(Vanic.trim(' trimmed '), "trimmed");
+    });
+  });
+
+  describe('Trim zero width and non-break spaces at both end of string', function () {
+    it('should return string with length 4 after removing spaces', function () {
+      const stringToTrim = ' trim​'; // Try to check input length: Vanic.logg('Input strin for trim length: ', stringToTrim.length);
+      assert.ok(Vanic.trim(stringToTrim).length === 4);
+    });
+  });
+
+  describe('Send inccorrect arg', function() {
+    it('should throw an error with the message "Trim work only for strings"', function() {
+      try {
+        Vanic.trim({});
+      } catch(error) {
+        assert.strictEqual(error.message, "Trim work only for strings");
+      }
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('trimAllSpaces testing', () => {
+  describe('Simple trim all spaces', function () {
+    it('just remove all spaces', function () {
+      assert.equal(Vanic.trimAllSpaces(' trim med '), "trimmed");
+    });
+  });
+
+  describe('Remove any hidden spaces from string', function () {
+    it('should return string with length 4 after removing all spaces', function () {
+      const stringToTrim = ' t ri​​​​ ‍m​​​​ ‍'; // Try to check input length: Vanic.logg('Input strin for trim length: ', stringToTrim.length);
+      assert.ok(Vanic.trimAllSpaces(stringToTrim).length === 4);
+    });
+  });
+
+  describe('Send inccorrect arg', function() {
+    it('should throw an error with the message "Trim work only for strings"', function() {
+      try {
+        Vanic.trimAllSpaces(4);
+      } catch(error) {
+        assert.strictEqual(error.message, "Trim work only for strings");
+      }
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('Capitalize testing', () => {
+  describe('Try send not a string', function () {
+    it('should throw an error with the message "Input for capitalize must be a String!"', function() {
+      try {
+        Vanic.capz([]);
+      } catch(error) {
+        assert.strictEqual(error.message, "Input for capitalize must be a String!");
+      }
+    });
+  });
+
+  describe('Simple capitalize', function () {
+    it('should capitalized string', function () {
+      assert.equal(Vanic.capz('capzed'), "Capzed");
     });
   });
 });
