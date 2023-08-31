@@ -1,6 +1,5 @@
 const { exec } = require('child_process');
 const fs = require('fs');
-const path = require("path");
 const colors = require("./colors.js");
 
 const isWin = process.platform === "win32";
@@ -15,10 +14,6 @@ const minifyBuildCom = "babel ./build/prebuild.js --out-file ./build/vanicom.min
 
 console.log(colors.ResetColors, " ");
 console.log("Generate build...");
-
-const projectPath = path.resolve(".");
-
-console.log('projectPath is: ', projectPath);
 
 exec(buildAllCom, (buildAllErr, buildAllOut) => {
   if (buildAllErr) {
