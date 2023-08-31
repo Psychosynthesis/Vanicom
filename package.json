@@ -1,8 +1,9 @@
 {
   "name": "vanicom",
-  "version": "1.0.4",
+  "version": "1.0.9",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
+  "types": "build/types.d.ts",
   "scripts": {
     "test": "mocha",
     "build": "node scripts/clean.js && node scripts/build.js && npm test"
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@babel/cli": "^7.22.9",
     "@babel/core": "^7.22.9",
+    "@babel/plugin-syntax-flow": "^7.22.5",
     "@babel/preset-env": "^7.22.9",
     "babel-preset-minify": "^0.5.2",
     "mocha": "^10.2.0"
