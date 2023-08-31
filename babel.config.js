@@ -19,7 +19,6 @@ module.exports = api => {
   ].filter(Boolean); // this will filter any falsy plugins (such as removing react-remove-properties when not in production);
 
   return {
-		"plugins": ["@babel/plugin-syntax-flow"],
     "presets": presets,
     "comments": !needMinimize,
     "ignore": [ "/tests" ]
