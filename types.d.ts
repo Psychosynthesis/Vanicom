@@ -9,7 +9,7 @@ import {
 	trimAllSpaces as trmAll,
 	capz as cpz,
 	getRandomString as getRndStr,
-} from './index.js';
+} from './source/index.js';
 
 declare type ObjectCheckingType = (value: any) => boolean;
 declare type GetRandomNumType = (min?: number, max?: number) => number;
