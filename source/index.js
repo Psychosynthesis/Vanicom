@@ -24,7 +24,11 @@ export const getRandomNum = function() { // Must be a not an arrow function to u
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-export const regExp = (name) => { return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
+export const roundNumber = (num, precision) => {
+	if (typeof(num) !== 'number') { throw new Error("First argument must be a number"); };
+  const castedPrecision = (typeof(precision) === 'number') ? precision : 1;
+  return (Math.round(num * Math.pow(10, castedPrecision)) / Math.pow(10, castedPrecision));
+}
 
 export const forEach = (list, fn, scope) => {
 	if (!Array.isArray(list)) { throw new Error("First argument must be an array"); };

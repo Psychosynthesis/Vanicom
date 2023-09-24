@@ -47,6 +47,9 @@
         }());
     }
 
+    // Вспомогательная регулярка для поиска слова окружённого пробелами в строке класса
+    var findWordRegExp = function (name) { return new RegExp('(^|\\s+)'+ name +'(\\s+|$)'); };
+
     // Полифилл для Class list object с основными методами для IE8/9, Safari.
     function ClassList(element){ this.element = element; }
     ClassList.prototype = {
@@ -56,10 +59,10 @@
         },
         remove: function(){
           var removeArgs = Array.prototype.slice.call(arguments);
-          forEach(removeArgs.sort(), function(name){ this.element.className = trim(this.element.className.replace(regExp(name), ' ')); }, this);
+          forEach(removeArgs.sort(), function(name){ this.element.className = trim(this.element.className.replace(findWordRegExp(name), ' ')); }, this);
         },
         toggle: function(name){ return this.contains(name) ? (this.remove(name), false) : (this.add(name), true); },
-        contains: function(name){ return regExp(name).test(this.element.className); },
+        contains: function(name){ return findWordRegExp(name).test(this.element.className); },
         item: function(i){ return this.element.className.split(/\s+/)[i] || null; },
     };
 

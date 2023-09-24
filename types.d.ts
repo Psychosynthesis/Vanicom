@@ -1,5 +1,6 @@
 import {
 	getRandomNum as getRndm,
+	roundNumber as roundNum,
 	isString as strCheck,
 	isObject as objCheck,
 	isExistAndNotNull as existCheck,
@@ -13,6 +14,7 @@ import {
 
 declare type ObjectCheckingType = (value: any) => boolean;
 declare type GetRandomNumType = (min?: number, max?: number) => number;
+declare type RoundNumType = (num: number, prec?: number) => number;
 declare type RegExpHelperType = (name: string) => RegExp;
 declare type ForEachType = <Input>(arr: Input[], fn: (arg: Input) => Void) => Void;
 declare type StringHelperType = (str: string) => string;
@@ -23,6 +25,7 @@ export const isObject: ObjectCheckingType<any> = strCheck;
 export const isExistAndNotNull: ObjectCheckingType<any> = existCheck;
 
 export const getRandomNum: GetRandomNumType<number> = getRndm;
+export const roundNumber: RoundNumType<number> = roundNum;
 export const regExp: RegExpHelperType<string> = regExpHelper;
 export const forEach: ForEachType = ownForEach;
 

@@ -33,10 +33,12 @@ To use as a standalone library, download `vanicom.min.js`
 
 Please note that it is desirable to import the Vanicom first or one of the first.
 
-After that all functions will be available on global scope everywhere on page: \
-`<script type="text/javascript">` \
-`logg(getRandomString(3)); // print some random string for length 3` \
-`</script>`
+After that all functions will be available on global scope everywhere on page:
+```
+<script type="text/javascript">
+  logg(getRandomString(3)); // print some random string for length 3
+</script>
+```
 
 
 
@@ -44,26 +46,39 @@ After that all functions will be available on global scope everywhere on page: \
 `logg('Is just a shortname for console.log');`
 
 
-**Checking if a variable is a string (just for convenience):** \
-`isString(4); // false` \
-`isString('absolute string'); // true`
+**Checking if a variable is a string (just for convenience):**
+```
+isString(4); // false
+isString('absolute string'); // true
+```
 
 
-**Checking if a variable is an object:** \
-`isObject(() => {}); // false` \
-`isObject([]); // false`
+**Checking if a variable is an object:**
+```
+isObject(() => {}); // false
+isObject([]); // false
+```
+
+**Exists and is not null (obviously nowhere):**
+```
+isExistAndNotNull(null); // false
+var testUndef;
+isExistAndNotNull(testUndef); // false
+```
 
 
-**Exists and is not null (obviously nowhere):** \
-`isExistAndNotNull(null); // false` \
-`var testUndef;` \
-`isExistAndNotNull(testUndef); // false`
+**Get random number. Can be used with or without arguments. The first argument specifies the minimum value, the second the maximum. The default minimum is zero, default maximum is 100000000:**
+```
+getRandomNum(); // Return number between 0 and 100000000
+getRandomNum(1000); // Return number between 1000 and 100000000
+getRandomNum(1000, 1002); // Return 1001, lol
+```
 
-
-**Get random number. Can be used with or without arguments. The first argument specifies the minimum value, the second the maximum. The default minimum is zero, default maximum is 100000000:** \
-`getRandomNum(); // Return number between 0 and 100000000 ` \
-`getRandomNum(1000); // Return number between 1000 and 100000000 ` \
-`getRandomNum(1000, 1002); // Return 1001, lol `
+**Rounds a number to a specified number of decimal places. If precision is not specified, a number with one decimal place will be returned:**
+```
+var someNum = 43.3423;
+roundNumber(someNum, 2); // 43.34
+```
 
 
 **Cut spaces (also hidden) from both start and end of string:** \
@@ -139,10 +154,12 @@ Vanicom как небольшой хелпер для мелких проект�
 
 Обратите внимание, что при таком использовании Vanicom желательно импортировать первым или одним из первых.
 
-После этого все функции будут доступны в глобальном нэймспейсе везде на странице: \
-  `<script type="text/javascript">` \
-  `logg(getRandomString(3)); // print some random string for length 3` \
-  `</script>`
+После этого все функции будут доступны в глобальном нэймспейсе везде на странице:
+```
+<script type="text/javascript">
+  logg(getRandomString(3)); // print some random string for length 3
+</script>
+```
 
 
 
@@ -150,26 +167,39 @@ Vanicom как небольшой хелпер для мелких проект�
 `logg('Is just a shortname for console.log'); // No comments`
 
 
-**Проверка, является ли переменная строкой (просто для удобства):** \
-`isString(4); // false` \
-`isString('absolute string'); // true`
+**Проверка, является ли переменная строкой (просто для удобства):**
+```
+isString(4); // false
+isString('absolute string'); // true
+```
 
 
-**Проверка на объект:** \
-`isObject(() => {}); // false` \
-`isObject([]); // false`
+**Проверка на объект:**
+```
+isObject(() => {}); // false
+isObject([]); // false
+```
+
+**Существует и не null (очевиднее некуда):**
+```
+isExistAndNotNull(null); // false
+var testUndef;
+isExistAndNotNull(testUndef); // false
+```
 
 
-**Существует и не null (очевиднее некуда):** \
-`isExistAndNotNull(null); // false` \
-`var testUndef;` \
-`isExistAndNotNull(testUndef); // false`
+**Получить случайное число. Можно использовать с аргументами или без. Первый аргумент указывает минимальное значение, второй — максимальное. Минимум по умолчанию ноль, максимум 100000000:**
+```
+getRandomNum(); // Return number between 0 and 100000000
+getRandomNum(1000); // Return number between 1000 and 100000000
+getRandomNum(1000, 1002); // Return 1001, lol
+```
 
-
-**Получить случайное число. Можно использовать с аргументами или без. Первый аргумент указывает минимальное значение, второй — максимальное. Минимум по умолчанию ноль, максимум 100000000:** \
-`getRandomNum(); // Return number between 0 and 100000000 ` \
-`getRandomNum(1000); // Return number between 1000 and 100000000 ` \
-`getRandomNum(1000, 1002); // Return 1001, lol `
+**Округление числа до заданного числа знаков после запятой. Если точность не задана, вернётся число с одним знаком после запятой:**
+```
+var someNum = 43.3423;
+roundNumber(someNum, 2); // 43.34
+```
 
 
 **Удалить пробелы с начала и конца строки (включая скрытые):** \

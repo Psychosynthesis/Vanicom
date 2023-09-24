@@ -155,6 +155,32 @@ describe('getRandomNum testing', () => {
 
 //////////////////////////////////////////////////////////////////////////
 
+describe('roundNumber testing', () => {
+  describe('Just round number', function () {
+    it('should return number with one decimal places when run without args', function () {
+      assert.equal(Vanic.roundNumber(5.1111), 5.1);
+    });
+  });
+
+  describe('Round with specified precision', function () {
+    it('should return a number with three decimal places', function () {
+      assert.ok(Vanic.roundNumber(8.09494, 3) === 8.095);
+    });
+  });
+
+  describe('Send not a number in forEach', function() {
+    it('should throw an error with the message "First argument must be..."', function() {
+      try {
+        Vanic.roundNumber('Not a number');
+      } catch(error) {
+        assert.strictEqual(error.message, "First argument must be a number");
+      }
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
 describe('forEach testing', () => {
   describe('Send not a Array in forEach', function() {
     it('should throw an error with the message "First argument must be..."', function() {

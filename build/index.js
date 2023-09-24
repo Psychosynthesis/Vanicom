@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.regExp = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
+exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -37,10 +37,15 @@ var getRandomNum = function getRandomNum() {
   return Math.floor(Math.random() * (max - min) + min);
 };
 exports.getRandomNum = getRandomNum;
-var regExp = function regExp(name) {
-  return new RegExp('(^|\\s+)' + name + '(\\s+|$)');
+var roundNumber = function roundNumber(num, precision) {
+  if (typeof num !== 'number') {
+    throw new Error("First argument must be a number");
+  }
+  ;
+  var castedPrecision = typeof precision === 'number' ? precision : 1;
+  return Math.round(num * Math.pow(10, castedPrecision)) / Math.pow(10, castedPrecision);
 };
-exports.regExp = regExp;
+exports.roundNumber = roundNumber;
 var forEach = function forEach(list, fn, scope) {
   if (!Array.isArray(list)) {
     throw new Error("First argument must be an array");
