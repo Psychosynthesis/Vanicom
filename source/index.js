@@ -89,7 +89,7 @@ export const getCookie = (name) => {
 
 export const setCookie = (name, value, lifetime) => {
   const default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
-  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/;";
+  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.

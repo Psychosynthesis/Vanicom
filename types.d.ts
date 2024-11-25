@@ -19,4 +19,5 @@ export const trim: StringHelperType;
 export const trimAllSpaces: StringHelperType;
 export const capz: StringHelperType;
 
-export const getRandomString;
+export const getRandomString: GetRandomStringType;
+export const getCookie: StringHelperType;
