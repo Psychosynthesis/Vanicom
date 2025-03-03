@@ -107,6 +107,12 @@ describe('isExistAndNotNull testing', () => {
       assert.equal(Vanic.isExistAndNotNull(x), true);
     });
   });
+
+  describe('Test on number zero', function () {
+    it('should return true when passing an zero', function () {
+      assert.equal(Vanic.isExistAndNotNull(0), true);
+    });
+  });
 });
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,6 +215,115 @@ describe('forEach testing', () => {
       } catch(error) {
         assert.strictEqual(error.message, "Second argument must be a function");
       }
+    });
+  });
+
+  describe('Check array processing', function() {
+    it('must modify the array via callback', function() {
+      const arr = [1, 2, 3];
+      const result = [];
+
+      Vanic.forEach(arr, (item) => result.push(item * 2));
+
+      assert.deepStrictEqual(result, [2, 4, 6]);
+    });
+
+    it('must pass the index and source array to the callback', function() {
+      let receivedIndexes = [];
+      let receivedArrayRef;
+
+      Vanic.forEach([10, 20], (item, index, array) => {
+        receivedIndexes.push(index);
+        receivedArrayRef = array;
+      });
+
+      assert.deepStrictEqual(receivedIndexes, [0, 1]);
+      assert.strictEqual(receivedArrayRef.length, 2);
+    });
+
+    it('must preserve the scope of the call', function() {
+      const scope = { multiplier: 3 };
+      let result;
+
+      Vanic.forEach([5], function(item) {
+        result = item * this.multiplier;
+      }, scope);
+
+      assert.strictEqual(result, 15);
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('forEachKey testing', () => {
+  describe('Send not an Object in forEachKey', function() {
+    it('should throw an error ', function() {
+      assert.throws(
+        () => Vanic.forEachKey([], () => {}),
+        /First argument must be a non-null object/
+      );
+    });
+  });
+
+  describe('Missing callback in forEachKey', function() {
+    it('should throw an error ', function() {
+      assert.throws(
+        () => Vanic.forEachKey({ a: 1 }),
+        /Second argument must be a function/
+      );
+    });
+  });
+
+  describe('Check object processing', function() {
+    it('must process all keys of the object', function() {
+      const obj = { a: 1, b: 2 };
+      const resultKeys = [];
+      const resultValues = [];
+
+      Vanic.forEachKey(obj, (key, value) => {
+        resultKeys.push(key);
+        resultValues.push(value);
+      });
+
+      assert.deepStrictEqual(resultKeys.sort(), ['a', 'b']);
+      assert.deepStrictEqual(resultValues.sort(), [1, 2]);
+    });
+
+    it('must pass the source object to the callback', function() {
+      let receivedObj;
+      const testObj = { x: 10 };
+
+      Vanic.forEachKey(testObj, (key, value, obj) => {
+        receivedObj = obj;
+      });
+
+      assert.strictEqual(receivedObj, testObj);
+    });
+
+    it('must preserve the scope of the call', function() {
+      const scope = { postfix: '!' };
+      let result;
+
+      Vanic.forEachKey(
+        { key: 'test' },
+        function(key, value) { result = value + this.postfix; },
+        scope
+      );
+
+      assert.strictEqual(result, 'test!');
+    });
+  });
+
+  // Дополнительный тест для проверки вложенности
+  describe('Check nested object processing', function() {
+    it('should not handle inherited properties', function() {
+      const parent = { inherited: true };
+      const obj = Object.create(parent);
+      obj.own = true;
+      let processedKeys = [];
+      Vanic.forEachKey(obj, (key) => processedKeys.push(key));
+      assert.deepStrictEqual(processedKeys, ['own']);
     });
   });
 });
@@ -317,5 +432,105 @@ describe('Capitalize testing', () => {
     it('should capitalized string', function () {
       assert.equal(Vanic.capz('capzed'), "Capzed");
     });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('DOM Node util', () => {
+  describe('deleteNode', () => {
+    it('delete existsing node', () => {
+      const div = document.createElement('div');
+      document.body.appendChild(div);
+      Vanic.deleteNode(div);
+      assert(!document.body.contains(div));
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('Cookies utils', () => {
+  beforeEach(() => {
+    document.cookie = '';
+  });
+
+  describe('Cookie functions', () => {
+    it('setCookie/getCookie work fine', () => {
+      Vanic.setCookie('test', 'value', 1000);
+      assert.strictEqual(Vanic.getCookie('test'), 'value');
+    });
+
+    it('does not find non-existent cookie', () => {
+      assert.strictEqual(Vanic.getCookie('unknown'), '');
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('LocalStorage utils', () => {
+  beforeEach(() => { localStorage.clear(); });
+
+  describe('LocalStorage functions', () => {
+
+    it('setLocalItem/getLocalItem saves and read data', () => {
+      Vanic.setLocalItem('key', { data: 123 }, 5000);
+      assert.deepStrictEqual(Vanic.getLocalItem('key'), { data: 123 });
+    });
+
+    it('returns null after expiration', (done) => {
+      Vanic.setLocalItem('temp', 'value', 100);
+      setTimeout(() => {
+        assert.strictEqual(Vanic.getLocalItem('temp'), null);
+        done();
+      }, 200);
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+
+describe('Toast testing', () => {
+  beforeEach(() => { document.body.innerHTML = ''; });
+  it('create a container on first call', () => {
+    Vanic.Toast({ message: 'Test message' });
+    const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
+    assert.ok(container, 'Контейнер не создан');
+    assert.strictEqual(container.children.length, 1, 'Сообщение не добавлено');
+  });
+
+  it('applies default styles if class is not specified', () => {
+    Vanic.Toast({ message: 'Test message' });
+    const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
+    assert.strictEqual(container.style.position, 'fixed', 'Default styles not applied');
+  });
+
+  it('uses a custom container class', () => {
+    const custom_class = 'custom-class';
+    Vanic.Toast({ message: 'Test message', class: custom_class });
+    const container = document.querySelector('.'+custom_class);
+    assert.ok(
+      container.className === Vanic.DEF_TOAST_CLASSNAME + ' ' + custom_class,
+      'Classes are applied incorrectly'
+    );
+  });
+
+  it('automatically hides the message via HideToast', (done) => {
+    Vanic.Toast({ message: 'Test message', duration: 350 });
+    setTimeout(() => {
+      const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
+      assert.strictEqual(container, null, 'Контейнер не удален');
+      done();
+    }, 700); // 500ms таймер + запас
+  });
+
+  it('deletes the last message if there are several', () => {
+    Vanic.Toast({ message: 'Test message' });
+    Vanic.Toast({ message: 'Test message 2' });
+    Vanic.HideToast();
+    const messages = document.querySelectorAll('.toast-message');
+    assert.strictEqual(messages.length, 1, 'Сообщение не удалено');
   });
 });

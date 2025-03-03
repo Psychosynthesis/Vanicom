@@ -5,6 +5,8 @@
 // https://github.com/Psychosynthesis/Vanicom
 /////////////////////////////////////////////////////////////////////////////////////////
 
+export const DEF_TOAST_CLASSNAME = 'vanic-toast-container';
+
 export const logg = console.log; // :)
 
 export const isString = (variable) => { return (typeof(variable) === "string"); };
@@ -12,10 +14,10 @@ export const isString = (variable) => { return (typeof(variable) === "string"); 
 export const isObject = (value) => {
 	if (Array.isArray(value)) return false;
 	let val_type = typeof value;
-  return value != null && (val_type === 'object');
+  return value !== null && (val_type === 'object');
 };
 
-export const isExistAndNotNull = (val) => { return !((typeof(val) === "undefined") || (val == null)); };
+export const isExistAndNotNull = (val) => { return !((typeof(val) === "undefined") || (val === null)); };
 
 export const getRandomNum = function() { // Must be a not an arrow function to use arguments object
   const min = (arguments.length >= 1) ? arguments[0] : 0;
@@ -33,7 +35,15 @@ export const roundNumber = (num, precision) => {
 export const forEach = (list, fn, scope) => {
 	if (!Array.isArray(list)) { throw new Error("First argument must be an array"); };
 	if (!fn || typeof(fn) !== 'function') { throw new Error("Second argument must be a function"); };
-	for (let i = 0; i < list.length; i++) { fn.call(scope, list[i]); }
+	for (let i = 0; i < list.length; i++) { fn.call(scope, list[i], i, list); }
+};
+
+export const forEachKey = (obj, fn, scope) => {
+	if (!isObject(obj)) { throw new Error("First argument must be a non-null object"); };
+	if (!fn || typeof(fn) !== 'function') { throw new Error("Second argument must be a function"); };
+	var keysForFor = Object.keys(obj);
+	// Передаем ключ, значение и объект в колбэк
+  forEach(keysForFor, (key) => fn.call(scope, key, obj[key], obj), scope);
 };
 
  // Вырезаем BOM и любые скрытые пробелы из начала и конца строки
@@ -65,7 +75,11 @@ export const getRandomString = (length) => {
 	return lol_random;
 };
 
-export const deleteNode = (node_to_delete) => { if (node_to_delete){ node_to_delete.parentNode.removeChild(node_to_delete); } };
+export const deleteNode = (node_to_delete) => {
+	if (node_to_delete && node_to_delete.parentNode) {
+    node_to_delete.parentNode.removeChild(node_to_delete);
+  }
+};
 
 export const getEventTarget = (eve) => { return eve.target || eve.currentTarget; };
 
@@ -73,10 +87,9 @@ export const getCookie = (name) => {
   const cookie = document.cookie;
   const search = name + "=";
   let wanted_cookie = '';
-  let offset = 0;
   let end = 0;
   if (cookie.length > 0) {
-      offset = cookie.indexOf(search);
+			let offset = cookie.search(new RegExp(`\\b${search}\\b`));
       if (offset > -1) {
           offset += search.length;
           end = cookie.indexOf(";", offset);
@@ -100,11 +113,60 @@ export const setLocalItem = (key, value, exp) => { // Caching values with expiry
 export const getLocalItem = (key) => { // Getting values with expiry date from LocalStorage that stored with `setLocalItem`.
   const itemStr = localStorage.getItem(key);
   if (!itemStr) { return null; }
-  const item = JSON.parse(itemStr);
-  const now = new Date();
-  if (now.getTime() > item.expiry) {
-    localStorage.removeItem(key);
-    return null;
-  }
-  return item.value;
+	try {
+	  const item = JSON.parse(itemStr);
+	  const now = new Date();
+	  if (now.getTime() > item.expiry) {
+	    localStorage.removeItem(key);
+	    return null;
+	  }
+	  return item.value;
+	} catch {
+		return null;
+	}
 };
+
+// Супер-простое всплывающее сообщение пользователю
+export const Toast = (params) => {
+	var containerClass = DEF_TOAST_CLASSNAME, duration = 3000, message;
+	if (isString(params)) {
+		message = params;
+	} else {
+		message = isExistAndNotNull(params.message) ? params.message : 'Message...';
+		containerClass += (isString(params.class) && params.class.trim() !== '') ? ' '+params.class : '';
+		duration = isExistAndNotNull(params.duration) ? params.duration : 3000;
+	}
+	var container;
+	var existContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME);
+	var messageDiv = document.createElement('div');
+	var defaultStyles = {
+		position: 'fixed', top: '90px', right: '50%', maxWidth: '300px', padding: '10px 20px', zIndex: '100000',
+		background: '#004a95', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.6)', borderRadius: '5px', wordBreak: 'break-word'
+	};
+	messageDiv.classList.add('toast-message');
+	messageDiv.textContent = message;
+
+	if (existContainer.length === 0) {
+		container = document.createElement('div');
+		container.className = containerClass;
+		// Дефолтные стили только если не передан класс
+		if (containerClass === DEF_TOAST_CLASSNAME) { forEachKey(defaultStyles, (key, val) => { container.style[key] = val; });	}
+		document.body.append(container);
+		if (isExistAndNotNull(duration) && duration > 0) { setTimeout(HideToast, (duration > 0) ? duration : 3000); }
+	} else {
+		container = existContainer[0];
+	}
+	container.append(messageDiv);
+}
+
+export const HideToast = () => {
+	var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
+	if (!checkContainer) { return; }
+	var toastsMessages = checkContainer.getElementsByClassName('toast-message');
+	if (toastsMessages.length > 1) {
+		checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
+		setTimeout(HideToast, 3000);
+	} else {
+		document.body.removeChild(checkContainer);
+	}
+}

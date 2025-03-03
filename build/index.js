@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEach = exports.deleteNode = exports.capz = void 0;
+exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.Toast = exports.HideToast = exports.DEF_TOAST_CLASSNAME = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -11,6 +11,8 @@ exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie 
 // https://github.com/Psychosynthesis/Vanicom
 /////////////////////////////////////////////////////////////////////////////////////////
 
+var DEF_TOAST_CLASSNAME = 'vanic-toast-container';
+exports.DEF_TOAST_CLASSNAME = DEF_TOAST_CLASSNAME;
 var logg = console.log; // :)
 exports.logg = logg;
 var isString = function isString(variable) {
@@ -20,11 +22,11 @@ exports.isString = isString;
 var isObject = function isObject(value) {
   if (Array.isArray(value)) return false;
   var val_type = typeof value;
-  return value != null && val_type === 'object';
+  return value !== null && val_type === 'object';
 };
 exports.isObject = isObject;
 var isExistAndNotNull = function isExistAndNotNull(val) {
-  return !(typeof val === "undefined" || val == null);
+  return !(typeof val === "undefined" || val === null);
 };
 exports.isExistAndNotNull = isExistAndNotNull;
 var getRandomNum = function getRandomNum() {
@@ -56,12 +58,28 @@ var forEach = function forEach(list, fn, scope) {
   }
   ;
   for (var i = 0; i < list.length; i++) {
-    fn.call(scope, list[i]);
+    fn.call(scope, list[i], i, list);
   }
+};
+exports.forEach = forEach;
+var forEachKey = function forEachKey(obj, fn, scope) {
+  if (!isObject(obj)) {
+    throw new Error("First argument must be a non-null object");
+  }
+  ;
+  if (!fn || typeof fn !== 'function') {
+    throw new Error("Second argument must be a function");
+  }
+  ;
+  var keysForFor = Object.keys(obj);
+  // Передаем ключ, значение и объект в колбэк
+  forEach(keysForFor, function (key) {
+    return fn.call(scope, key, obj[key], obj);
+  }, scope);
 };
 
 // Вырезаем BOM и любые скрытые пробелы из начала и конца строки
-exports.forEach = forEach;
+exports.forEachKey = forEachKey;
 var trim = function trim(str) {
   if (typeof str !== 'string') {
     throw new Error("Trim work only for strings");
@@ -101,7 +119,7 @@ var getRandomString = function getRandomString(length) {
 };
 exports.getRandomString = getRandomString;
 var deleteNode = function deleteNode(node_to_delete) {
-  if (node_to_delete) {
+  if (node_to_delete && node_to_delete.parentNode) {
     node_to_delete.parentNode.removeChild(node_to_delete);
   }
 };
@@ -114,10 +132,9 @@ var getCookie = function getCookie(name) {
   var cookie = document.cookie;
   var search = name + "=";
   var wanted_cookie = '';
-  var offset = 0;
   var end = 0;
   if (cookie.length > 0) {
-    offset = cookie.indexOf(search);
+    var offset = cookie.search(new RegExp("\\b".concat(search, "\\b")));
     if (offset > -1) {
       offset += search.length;
       end = cookie.indexOf(";", offset);
@@ -132,7 +149,7 @@ var getCookie = function getCookie(name) {
 exports.getCookie = getCookie;
 var setCookie = function setCookie(name, value, lifetime) {
   var default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
-  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/;";
+  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
 exports.setCookie = setCookie;
 var setLocalItem = function setLocalItem(key, value, exp) {
@@ -150,12 +167,80 @@ var getLocalItem = function getLocalItem(key) {
   if (!itemStr) {
     return null;
   }
-  var item = JSON.parse(itemStr);
-  var now = new Date();
-  if (now.getTime() > item.expiry) {
-    localStorage.removeItem(key);
+  try {
+    var item = JSON.parse(itemStr);
+    var now = new Date();
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  } catch (_unused) {
     return null;
   }
-  return item.value;
 };
+
+// Супер-простое всплывающее сообщение пользователю
 exports.getLocalItem = getLocalItem;
+var Toast = function Toast(params) {
+  var containerClass = DEF_TOAST_CLASSNAME,
+    duration = 3000,
+    message;
+  if (isString(params)) {
+    message = params;
+  } else {
+    message = isExistAndNotNull(params.message) ? params.message : 'Message...';
+    containerClass += isString(params.class) && params.class.trim() !== '' ? ' ' + params.class : '';
+    duration = isExistAndNotNull(params.duration) ? params.duration : 3000;
+  }
+  var container;
+  var existContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME);
+  var messageDiv = document.createElement('div');
+  var defaultStyles = {
+    position: 'fixed',
+    top: '90px',
+    right: '50%',
+    maxWidth: '300px',
+    padding: '10px 20px',
+    zIndex: '100000',
+    background: '#004a95',
+    color: '#ffffff',
+    border: '1px solid rgba(255, 255, 255, 0.6)',
+    borderRadius: '5px',
+    wordBreak: 'break-word'
+  };
+  messageDiv.classList.add('toast-message');
+  messageDiv.textContent = message;
+  if (existContainer.length === 0) {
+    container = document.createElement('div');
+    container.className = containerClass;
+    // Дефолтные стили только если не передан класс
+    if (containerClass === DEF_TOAST_CLASSNAME) {
+      forEachKey(defaultStyles, function (key, val) {
+        container.style[key] = val;
+      });
+    }
+    document.body.append(container);
+    if (isExistAndNotNull(duration) && duration > 0) {
+      setTimeout(HideToast, duration > 0 ? duration : 3000);
+    }
+  } else {
+    container = existContainer[0];
+  }
+  container.append(messageDiv);
+};
+exports.Toast = Toast;
+var HideToast = function HideToast() {
+  var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
+  if (!checkContainer) {
+    return;
+  }
+  var toastsMessages = checkContainer.getElementsByClassName('toast-message');
+  if (toastsMessages.length > 1) {
+    checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
+    setTimeout(HideToast, 3000);
+  } else {
+    document.body.removeChild(checkContainer);
+  }
+};
+exports.HideToast = HideToast;
