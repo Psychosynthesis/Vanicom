@@ -20,7 +20,7 @@ var isString = function isString(variable) {
 };
 exports.isString = isString;
 var isNumber = function isNumber(n) {
-  return !(typeof n === "bigint") && !isString(isString) &&
+  return !(typeof n === "bigint") && !isString(n) &&
   // To detect number in quotes like '11243'
   !isNaN(parseFloat(n)) && !isNaN(n - 0);
 };

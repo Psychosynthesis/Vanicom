@@ -36,9 +36,9 @@ describe('isNumber testing', () => {
     });
   });
 
-  describe('Detect number', function () {
-    it('should return true when passing a number as a string', function () {
-      assert.equal(Vanic.isNumber('1254'), true);
+  describe('Detect string', function () {
+    it('should return false when passing a number as a string', function () {
+      assert.equal(Vanic.isNumber('1254'), false);
     });
   });
 

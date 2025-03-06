@@ -12,7 +12,7 @@ export const logg = console.log; // :)
 export const isString = (variable) => (typeof(variable) === "string");
 export const isNumber = (n) =>
 	!(typeof(n) === "bigint") &&
-	!isString(isString) && // To detect number in quotes like '11243'
+	!isString(n) && // To detect number in quotes like '11243'
 	!isNaN(parseFloat(n)) && !isNaN(n - 0);
 
 export const isObject = (value) => {
