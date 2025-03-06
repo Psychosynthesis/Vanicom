@@ -202,22 +202,17 @@ import { logg, getRandomString } from 'vanicom';
 logg('Is just a shortname for console.log'); // No comments`
 ```
 
-
-**Проверка, является ли переменная строкой (просто для удобства):**
+ **Короткие хелперы для проверки на типы. Обычно это удобнее чем каждый раз проверять самостоятельно типа как `typeof(x) ==='y'`, кроме того это не всегда работает, как например с null.**
 ```JS
+// Проверка, является ли переменная строкой (просто для удобства):
 isString(4); // false
 isString('absolute string'); // true
-```
 
-
-**Проверка на объект:**
-```JS
+// Проверка на объект:
 isObject(() => {}); // false
 isObject([]); // false
-```
 
-**Существует и не null:**
-```JS
+// Существует и не null:
 isExistAndNotNull(null); // false
 var testUndef;
 isExistAndNotNull(testUndef); // false
