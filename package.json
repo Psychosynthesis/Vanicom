@@ -28,6 +28,7 @@
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
     "babel-preset-minify": "^0.5.2",
+    "jsdom": "^26.0.0",
     "mocha": "^10.2.0"
   }
 }

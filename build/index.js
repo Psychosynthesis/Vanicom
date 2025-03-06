@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isExistAndNotNull = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.Toast = exports.HideToast = exports.DEF_TOAST_CLASSNAME = void 0;
+exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isNumber = exports.isExistAndNotNull = exports.hideToast = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -19,6 +19,12 @@ var isString = function isString(variable) {
   return typeof variable === "string";
 };
 exports.isString = isString;
+var isNumber = function isNumber(n) {
+  return !(typeof n === "bigint") && !isString(isString) &&
+  // To detect number in quotes like '11243'
+  !isNaN(parseFloat(n)) && !isNaN(n - 0);
+};
+exports.isNumber = isNumber;
 var isObject = function isObject(value) {
   if (Array.isArray(value)) return false;
   var val_type = typeof value;
@@ -154,10 +160,11 @@ var setCookie = function setCookie(name, value, lifetime) {
 exports.setCookie = setCookie;
 var setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
+  // exp - сколько времени ключ будет валиден в мс
   var item = {
     value: value,
-    expiry: Date.now() + exp
-  }; // exp - сколько времени ключ будет валиден в мс
+    expiry: isNumber(exp) && exp > 0 ? Date.now() + exp : null
+  };
   localStorage.setItem(key, JSON.stringify(item));
 };
 exports.setLocalItem = setLocalItem;
@@ -170,7 +177,8 @@ var getLocalItem = function getLocalItem(key) {
   try {
     var item = JSON.parse(itemStr);
     var now = new Date();
-    if (now.getTime() > item.expiry) {
+    item.expiry = parseInt(item === null || item === void 0 ? void 0 : item.expiry);
+    if (!isNaN(item.expiry) && now.getTime() > item.expiry) {
       localStorage.removeItem(key);
       return null;
     }
@@ -182,7 +190,7 @@ var getLocalItem = function getLocalItem(key) {
 
 // Супер-простое всплывающее сообщение пользователю
 exports.getLocalItem = getLocalItem;
-var Toast = function Toast(params) {
+var toast = function toast(params) {
   var containerClass = DEF_TOAST_CLASSNAME,
     duration = 3000,
     message;
@@ -222,15 +230,15 @@ var Toast = function Toast(params) {
     }
     document.body.append(container);
     if (isExistAndNotNull(duration) && duration > 0) {
-      setTimeout(HideToast, duration > 0 ? duration : 3000);
+      setTimeout(hideToast, duration > 0 ? duration : 3000);
     }
   } else {
     container = existContainer[0];
   }
   container.append(messageDiv);
 };
-exports.Toast = Toast;
-var HideToast = function HideToast() {
+exports.toast = toast;
+var hideToast = function hideToast() {
   var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
   if (!checkContainer) {
     return;
@@ -238,9 +246,9 @@ var HideToast = function HideToast() {
   var toastsMessages = checkContainer.getElementsByClassName('toast-message');
   if (toastsMessages.length > 1) {
     checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
-    setTimeout(HideToast, 3000);
+    setTimeout(hideToast, 3000);
   } else {
     document.body.removeChild(checkContainer);
   }
 };
-exports.HideToast = HideToast;
+exports.hideToast = hideToast;

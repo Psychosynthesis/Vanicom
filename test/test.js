@@ -29,6 +29,48 @@ describe('isString testing', () => {
 
 //////////////////////////////////////////////////////////////////////////
 
+describe('isNumber testing', () => {
+  describe('Detect number', function () {
+    it('should return true when passing a number', function () {
+      assert.equal(Vanic.isNumber(0), true);
+    });
+  });
+
+  describe('Detect number', function () {
+    it('should return true when passing a number as a string', function () {
+      assert.equal(Vanic.isNumber('1254'), true);
+    });
+  });
+
+  describe('Test on BigInt', function () {
+    it('should return false when passing a BigInt', function () {
+      var huge = BigInt(9007199254740991);
+      assert.equal(Vanic.isNumber(huge), false);
+    });
+  });
+
+  describe('Detect NaN is not number', function () {
+    it('should return false when passing a NaN', function () {
+      assert.equal(Vanic.isNumber(0/0), false);
+    });
+  });
+
+  describe('Detect undefined', function () {
+    it('should return false when passing undefined', function () {
+      assert.equal(Vanic.isNumber(), false);
+    });
+  });
+
+  describe('Test on null', function () {
+    it('should return false when passing a null-value', function () {
+      assert.equal(Vanic.isNumber(null), false);
+    });
+  });
+
+});
+
+//////////////////////////////////////////////////////////////////////////
+
 describe('isObject testing', () => {
   describe('Detect object', function () {
     it('should return true when passing an object', function () {
@@ -495,21 +537,21 @@ describe('LocalStorage utils', () => {
 describe('Toast testing', () => {
   beforeEach(() => { document.body.innerHTML = ''; });
   it('create a container on first call', () => {
-    Vanic.Toast({ message: 'Test message' });
+    Vanic.toast({ message: 'Test message' });
     const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
     assert.ok(container, 'Контейнер не создан');
     assert.strictEqual(container.children.length, 1, 'Сообщение не добавлено');
   });
 
   it('applies default styles if class is not specified', () => {
-    Vanic.Toast({ message: 'Test message' });
+    Vanic.toast({ message: 'Test message' });
     const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
     assert.strictEqual(container.style.position, 'fixed', 'Default styles not applied');
   });
 
   it('uses a custom container class', () => {
     const custom_class = 'custom-class';
-    Vanic.Toast({ message: 'Test message', class: custom_class });
+    Vanic.toast({ message: 'Test message', class: custom_class });
     const container = document.querySelector('.'+custom_class);
     assert.ok(
       container.className === Vanic.DEF_TOAST_CLASSNAME + ' ' + custom_class,
@@ -517,8 +559,8 @@ describe('Toast testing', () => {
     );
   });
 
-  it('automatically hides the message via HideToast', (done) => {
-    Vanic.Toast({ message: 'Test message', duration: 350 });
+  it('automatically hides the message via hideToast', (done) => {
+    Vanic.toast({ message: 'Test message', duration: 350 });
     setTimeout(() => {
       const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
       assert.strictEqual(container, null, 'Контейнер не удален');
@@ -527,9 +569,9 @@ describe('Toast testing', () => {
   });
 
   it('deletes the last message if there are several', () => {
-    Vanic.Toast({ message: 'Test message' });
-    Vanic.Toast({ message: 'Test message 2' });
-    Vanic.HideToast();
+    Vanic.toast({ message: 'Test message' });
+    Vanic.toast({ message: 'Test message 2' });
+    Vanic.hideToast();
     const messages = document.querySelectorAll('.toast-message');
     assert.strictEqual(messages.length, 1, 'Сообщение не удалено');
   });

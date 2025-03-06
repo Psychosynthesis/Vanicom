@@ -9,7 +9,11 @@ export const DEF_TOAST_CLASSNAME = 'vanic-toast-container';
 
 export const logg = console.log; // :)
 
-export const isString = (variable) => { return (typeof(variable) === "string"); };
+export const isString = (variable) => (typeof(variable) === "string");
+export const isNumber = (n) =>
+	!(typeof(n) === "bigint") &&
+	!isString(isString) && // To detect number in quotes like '11243'
+	!isNaN(parseFloat(n)) && !isNaN(n - 0);
 
 export const isObject = (value) => {
 	if (Array.isArray(value)) return false;
@@ -106,7 +110,11 @@ export const setCookie = (name, value, lifetime) => {
 };
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.
-  const item = { value, expiry: Date.now() + exp }; // exp - сколько времени ключ будет валиден в мс
+	// exp - сколько времени ключ будет валиден в мс
+  const item = {
+		value,
+		expiry: (isNumber(exp) && exp > 0) ? (Date.now() + exp) : null
+	};
   localStorage.setItem(key, JSON.stringify(item));
 };
 
@@ -115,8 +123,9 @@ export const getLocalItem = (key) => { // Getting values with expiry date from L
   if (!itemStr) { return null; }
 	try {
 	  const item = JSON.parse(itemStr);
-	  const now = new Date();
-	  if (now.getTime() > item.expiry) {
+		const now = new Date();
+		item.expiry = parseInt(item?.expiry);
+	  if (!isNaN(item.expiry) && now.getTime() > item.expiry) {
 	    localStorage.removeItem(key);
 	    return null;
 	  }
@@ -127,7 +136,7 @@ export const getLocalItem = (key) => { // Getting values with expiry date from L
 };
 
 // Супер-простое всплывающее сообщение пользователю
-export const Toast = (params) => {
+export const toast = (params) => {
 	var containerClass = DEF_TOAST_CLASSNAME, duration = 3000, message;
 	if (isString(params)) {
 		message = params;
@@ -152,20 +161,20 @@ export const Toast = (params) => {
 		// Дефолтные стили только если не передан класс
 		if (containerClass === DEF_TOAST_CLASSNAME) { forEachKey(defaultStyles, (key, val) => { container.style[key] = val; });	}
 		document.body.append(container);
-		if (isExistAndNotNull(duration) && duration > 0) { setTimeout(HideToast, (duration > 0) ? duration : 3000); }
+		if (isExistAndNotNull(duration) && duration > 0) { setTimeout(hideToast, (duration > 0) ? duration : 3000); }
 	} else {
 		container = existContainer[0];
 	}
 	container.append(messageDiv);
 }
 
-export const HideToast = () => {
+export const hideToast = () => {
 	var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
 	if (!checkContainer) { return; }
 	var toastsMessages = checkContainer.getElementsByClassName('toast-message');
 	if (toastsMessages.length > 1) {
 		checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
-		setTimeout(HideToast, 3000);
+		setTimeout(hideToast, 3000);
 	} else {
 		document.body.removeChild(checkContainer);
 	}
