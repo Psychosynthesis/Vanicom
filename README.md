@@ -114,10 +114,16 @@ getRandomString(5);
 ```
 
 
-**Delete DOM node:**
+**DOM helpers:**
 ```JS
-deleteNode(document.getElementById("test"));
+deleteNode(document.getElementById("test")); // Before deleting, it checks whether it has a parent and whether the node itself exists.
+
+// When you need to write a universal handler, without reference to which element the event occurred on
+getEventTarget(eve);
+// return eve.target || eve.currentTarget;
 ```
+
+
 
 **Helpers for enumerate properties (almost the same as what already exists in ES6):**
 ```JS
@@ -294,9 +300,9 @@ getRandomString(5);
 ```
 
 
-**Удалить узел DOM:**
+**Работа с DOM:**
 ```JS
-deleteNode(document.getElementById("test"));
+deleteNode(document.getElementById("test")); // Перед удалением проверяет есть ли у него родитель и существует ли сам узел
 
 // Когда нужно написать универсальный обработчик, без привязки к тому на каком элементе произошло событие
 getEventTarget(eve);
@@ -316,7 +322,7 @@ forEach(obj, (key, val, obj) => {
 });
 ```
 
-**Простая работа с куками: **
+**Простая работа с куками:**
 ```JS
 // Установить куку по ключу. Если время жизни (последний аргумент, в секундах) не указано, будет использован год
 setCookie('authHash', 'dfuydfgoudfgjeer', 36000);
