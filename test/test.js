@@ -1,6 +1,18 @@
 const Vanic = require('../build');
 const assert = require('assert');
 
+describe('Detect environments', () => {
+  it('detect we are running in NodeJS', () => {
+    assert.equal(Vanic.isNode(), true);
+  });
+
+  it('detect is test run', () => {
+    assert.equal(Vanic.isTestEnv(), true);
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
 describe('isString testing', () => {
   describe('Detect string', function () {
     it('should return true when passing a string', function () {
@@ -480,6 +492,10 @@ describe('Capitalize testing', () => {
 //////////////////////////////////////////////////////////////////////////
 
 describe('DOM Node util', () => {
+  beforeEach(() => {
+    document.cookie = '';
+  });
+
   describe('deleteNode', () => {
     it('delete existsing node', () => {
       const div = document.createElement('div');
@@ -512,7 +528,9 @@ describe('Cookies utils', () => {
 //////////////////////////////////////////////////////////////////////////
 
 describe('LocalStorage utils', () => {
-  beforeEach(() => { localStorage.clear(); });
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   describe('LocalStorage functions', () => {
 
@@ -533,9 +551,11 @@ describe('LocalStorage utils', () => {
 
 //////////////////////////////////////////////////////////////////////////
 
-
 describe('Toast testing', () => {
-  beforeEach(() => { document.body.innerHTML = ''; });
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
   it('create a container on first call', () => {
     Vanic.toast({ message: 'Test message' });
     const container = document.querySelector('.'+Vanic.DEF_TOAST_CLASSNAME);
@@ -576,3 +596,5 @@ describe('Toast testing', () => {
     assert.strictEqual(messages.length, 1, 'Сообщение не удалено');
   });
 });
+
+//////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isString = exports.isObject = exports.isNumber = exports.isExistAndNotNull = exports.hideToast = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
+exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isTestEnv = exports.isString = exports.isObject = exports.isNumber = exports.isNode = exports.isExistAndNotNull = exports.hideToast = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -35,6 +35,20 @@ var isExistAndNotNull = function isExistAndNotNull(val) {
   return !(typeof val === "undefined" || val === null);
 };
 exports.isExistAndNotNull = isExistAndNotNull;
+var isNode = function isNode() {
+  return (
+    // Are we running in NodeJS?
+    typeof process !== 'undefined' && process.versions != null && process.versions.node != null
+  );
+};
+exports.isNode = isNode;
+var isTestEnv = function isTestEnv() {
+  return (
+    // Need for testing with Mocha
+    isNode() && document.IS_MOCHA_TEST
+  );
+};
+exports.isTestEnv = isTestEnv;
 var getRandomNum = function getRandomNum() {
   // Must be a not an arrow function to use arguments object
   var min = arguments.length >= 1 ? arguments[0] : 0;
@@ -125,6 +139,10 @@ var getRandomString = function getRandomString(length) {
 };
 exports.getRandomString = getRandomString;
 var deleteNode = function deleteNode(node_to_delete) {
+  if (isNode() && !isTestEnv()) {
+    console.log('DOM manipulations works only in browser');
+    return;
+  }
   if (node_to_delete && node_to_delete.parentNode) {
     node_to_delete.parentNode.removeChild(node_to_delete);
   }
@@ -135,6 +153,10 @@ var getEventTarget = function getEventTarget(eve) {
 };
 exports.getEventTarget = getEventTarget;
 var getCookie = function getCookie(name) {
+  if (isNode() && !isTestEnv()) {
+    console.log('Cookies works only in browser');
+    return;
+  }
   var cookie = document.cookie;
   var search = name + "=";
   var wanted_cookie = '';
@@ -154,6 +176,10 @@ var getCookie = function getCookie(name) {
 };
 exports.getCookie = getCookie;
 var setCookie = function setCookie(name, value, lifetime) {
+  if (isNode() && !isTestEnv()) {
+    console.log('Cookies works only in browser');
+    return;
+  }
   var default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
   document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
@@ -191,6 +217,10 @@ var getLocalItem = function getLocalItem(key) {
 // Супер-простое всплывающее сообщение пользователю
 exports.getLocalItem = getLocalItem;
 var toast = function toast(params) {
+  if (isNode() && !isTestEnv()) {
+    console.log('Toast works only in browser');
+    return;
+  }
   var containerClass = DEF_TOAST_CLASSNAME,
     duration = 3000,
     message;
@@ -239,6 +269,10 @@ var toast = function toast(params) {
 };
 exports.toast = toast;
 var hideToast = function hideToast() {
+  if (isNode() && !isTestEnv()) {
+    console.log('Toast works only in browser');
+    return;
+  }
   var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
   if (!checkContainer) {
     return;
@@ -248,7 +282,7 @@ var hideToast = function hideToast() {
     checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
     setTimeout(hideToast, 3000);
   } else {
-    document.body.removeChild(checkContainer);
+    deleteNode(checkContainer);
   }
 };
 exports.hideToast = hideToast;

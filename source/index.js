@@ -23,6 +23,16 @@ export const isObject = (value) => {
 
 export const isExistAndNotNull = (val) => { return !((typeof(val) === "undefined") || (val === null)); };
 
+export const isNode = () => ( // Are we running in NodeJS?
+  (typeof(process) !== 'undefined') &&
+  process.versions != null &&
+  process.versions.node != null
+);
+
+export const isTestEnv = () => ( // Need for testing with Mocha
+  isNode() && document.IS_MOCHA_TEST
+);
+
 export const getRandomNum = function() { // Must be a not an arrow function to use arguments object
   const min = (arguments.length >= 1) ? arguments[0] : 0;
   const max = (arguments.length == 2) ? arguments[1] : 100000000;
@@ -80,6 +90,11 @@ export const getRandomString = (length) => {
 };
 
 export const deleteNode = (node_to_delete) => {
+	if (isNode() && !isTestEnv()) {
+		console.log('DOM manipulations works only in browser');
+		return;
+	}
+
 	if (node_to_delete && node_to_delete.parentNode) {
     node_to_delete.parentNode.removeChild(node_to_delete);
   }
@@ -88,6 +103,10 @@ export const deleteNode = (node_to_delete) => {
 export const getEventTarget = (eve) => { return eve.target || eve.currentTarget; };
 
 export const getCookie = (name) => {
+	if (isNode() && !isTestEnv()) {
+		console.log('Cookies works only in browser');
+		return;
+	}
   const cookie = document.cookie;
   const search = name + "=";
   let wanted_cookie = '';
@@ -105,6 +124,10 @@ export const getCookie = (name) => {
 };
 
 export const setCookie = (name, value, lifetime) => {
+	if (isNode() && !isTestEnv()) {
+		console.log('Cookies works only in browser');
+		return;
+	}
   const default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
   document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
@@ -137,6 +160,10 @@ export const getLocalItem = (key) => { // Getting values with expiry date from L
 
 // Супер-простое всплывающее сообщение пользователю
 export const toast = (params) => {
+	if (isNode() && !isTestEnv()) {
+		console.log('Toast works only in browser');
+		return;
+	}
 	var containerClass = DEF_TOAST_CLASSNAME, duration = 3000, message;
 	if (isString(params)) {
 		message = params;
@@ -169,6 +196,10 @@ export const toast = (params) => {
 }
 
 export const hideToast = () => {
+	if (isNode() && !isTestEnv()) {
+		console.log('Toast works only in browser');
+		return;
+	}
 	var checkContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME)[0];
 	if (!checkContainer) { return; }
 	var toastsMessages = checkContainer.getElementsByClassName('toast-message');
@@ -176,6 +207,6 @@ export const hideToast = () => {
 		checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
 		setTimeout(hideToast, 3000);
 	} else {
-		document.body.removeChild(checkContainer);
+		deleteNode(checkContainer);
 	}
 }

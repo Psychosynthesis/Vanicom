@@ -53,6 +53,7 @@ After that all functions will be available on global scope everywhere on page:
 ### Description and examples
 ```JS
 logg('Is just a shortname for console.log');
+isNode(); // Are we running in NodeJS?
 ```
 
  **Helpers for checking types. Usually it is more convenient than checking the type manually each time like `typeof(x) ==='y'`, besides it does not always work, like for example with `null`.**
@@ -64,6 +65,9 @@ isString('absolute string'); // true
 // Checking if a variable is an object:
 isObject(() => {}); // false
 isObject([]); // false
+
+// ...
+isNumber('1234'); // No is not
 
 // Exists and is not null:
 isExistAndNotNull(null); // false
@@ -88,14 +92,12 @@ roundNumber(someNum, 2); // 43.34
 ```
 
 
-**Cut spaces (also hidden) from both start and end of string:**
+**Remove spaces from a string:**
 ```JS
+// From the beginning and end of the line (including hidden ones):
 trim(' testing string  '); // return 'testing string'
-```
 
-
-**Cut totaly all spaces (also hidden) from string:**
-```JS
+// Remove ALL space characters from a string (including hidden ones):
 trimAllSpaces(' testing string  '); // return 'testingstring'
 ```
 
@@ -117,15 +119,25 @@ getRandomString(5);
 deleteNode(document.getElementById("test"));
 ```
 
-
-**Set cookie by name. If lifetime (in seconds) not specifed the year will be used:**
+**Helpers for enumerate properties (almost the same as what already exists in ES6):**
 ```JS
-setCookie('authHash', 'dfuydfgoudfgjeer', 36000);
+const arr = [1, 2];
+forEach(arr, (item, index, array) => {
+  logg(item, index, array); // 1, 1, [1,2]
+});
+const obj = { x: '1', y: 2 };
+forEach(obj, (key, val, obj) => {
+  logg(key, val, obj); // 'x', '1', { x: '1', y: 2 }
+});
 ```
 
 
-**Get cookie by name. A string will be received, no conversions are performed:**
+**Work with cookies:**
 ```JS
+// Set cookie by name. If lifetime (in seconds) not specifed the year will be used
+setCookie('authHash', 'dfuydfgoudfgjeer', 36000);
+
+// Get cookie by name. A string will be received, no conversions are performed
 getCookie('authHash');
 ```
 
@@ -140,6 +152,29 @@ setLocalItem('theme', 'dark'); // Or justset item without expiry date
 **Getting cached values with expiry date from LocalStorage that stored with `setLocalItem`:**
 ```JS
 getLocalItem('theme');
+```
+
+**Display a short pop-up message (toast):**
+```JS
+toast({ message: 'Test message', duration: 3500, class: 'custom-class' });
+// To forcefully hide the last message:
+hideToast();
+```
+If no custom class is specified, the container will be assigned the default class `vanic-toast-container` with the following default styling:
+```CSS
+{
+  position: fixed;
+  top: 90px;
+  right: 50%;
+  max-width: 300px;
+  padding: 10px 20px;
+  z-index: 100000;
+  background: #004a95;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  word-break: break-word;
+}
 ```
 
 
@@ -200,6 +235,7 @@ import { logg, getRandomString } from 'vanicom';
 ### Описание и примеры
 ```JS
 logg('Is just a shortname for console.log'); // No comments`
+isNode(); // Код запущен в NodeJS?
 ```
 
  **Короткие хелперы для проверки на типы. Обычно это удобнее чем каждый раз проверять самостоятельно типа как `typeof(x) ==='y'`, кроме того это не всегда работает, как например с null.**
@@ -211,6 +247,8 @@ isString('absolute string'); // true
 // Проверка на объект:
 isObject(() => {}); // false
 isObject([]); // false
+
+isNumber('1234'); // Нет, это строка
 
 // Существует и не null:
 isExistAndNotNull(null); // false
@@ -234,14 +272,12 @@ roundNumber(someNum, 2); // 43.34
 ```
 
 
-**Удалить пробелы с начала и конца строки (включая скрытые):**
+**Удалить пробелы из строки:**
 ```JS
+// С начала и конца строки (включая скрытые):
 trim(' testing string  '); // return 'testing string'
-```
 
-
-**Удалить из строки вообще все символы пробелов (включая скрытые):**
-```JS
+// Удалить из строки вообще все символы пробелов (включая скрытые):
 trimAllSpaces(' testing string  '); // return 'testingstring'
 ```
 
@@ -261,17 +297,31 @@ getRandomString(5);
 **Удалить узел DOM:**
 ```JS
 deleteNode(document.getElementById("test"));
+
+// Когда нужно написать универсальный обработчик, без привязки к тому на каком элементе произошло событие
+getEventTarget(eve);
+// return eve.target || eve.currentTarget;
+
 ```
 
-
-**Установить куку по ключу. Если время жизни (последний аргумент, в секундах) не указано, будет использован год:**
+**Хелперы для перебора свойств (почти то же что уже есть в ES6):**
 ```JS
+const arr = [1, 2];
+forEach(arr, (item, index, array) => {
+  logg(item, index, array); // 1, 1, [1,2]
+});
+const obj = { x: '1', y: 2 };
+forEach(obj, (key, val, obj) => {
+  logg(key, val, obj); // 'x', '1', { x: '1', y: 2 }
+});
+```
+
+**Простая работа с куками: **
+```JS
+// Установить куку по ключу. Если время жизни (последний аргумент, в секундах) не указано, будет использован год
 setCookie('authHash', 'dfuydfgoudfgjeer', 36000);
-```
 
-
-**Получить значение куки по ключу. Будет получена строка, никаких преобразований не проводится:**
-```JS
+// Получить значение куки по ключу. Будет получена строка, никаких преобразований не проводится
 getCookie('authHash');
 ```
 
