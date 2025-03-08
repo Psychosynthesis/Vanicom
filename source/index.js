@@ -176,8 +176,8 @@ export const toast = (params) => {
 	var existContainer = document.getElementsByClassName(DEF_TOAST_CLASSNAME);
 	var messageDiv = document.createElement('div');
 	var defaultStyles = {
-		position: 'fixed', top: '90px', right: '50%', maxWidth: '300px', padding: '10px 20px', zIndex: '100000',
-		background: '#004a95', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.6)', borderRadius: '5px', wordBreak: 'break-word'
+		position: 'fixed', top: '90px', right: '100px', maxWidth: '300px', padding: '10px 20px', zIndex: '100000',
+		background: '#333', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.6)', borderRadius: '5px', wordBreak: 'break-word'
 	};
 	messageDiv.classList.add('toast-message');
 	messageDiv.textContent = message;

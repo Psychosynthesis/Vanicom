@@ -237,12 +237,12 @@ var toast = function toast(params) {
   var defaultStyles = {
     position: 'fixed',
     top: '90px',
-    right: '50%',
+    right: '100px',
     maxWidth: '300px',
     padding: '10px 20px',
     zIndex: '100000',
-    background: '#004a95',
-    color: '#ffffff',
+    background: '#333',
+    color: '#fff',
     border: '1px solid rgba(255, 255, 255, 0.6)',
     borderRadius: '5px',
     wordBreak: 'break-word'
