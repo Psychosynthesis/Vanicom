@@ -6,7 +6,8 @@
   "types": "types.d.ts",
   "scripts": {
     "test": "mocha --require ./test/setup.js",
-    "build": "node scripts/clean.js && node scripts/build.js && npm test"
+    "build": "node scripts/clean.js && node scripts/build.js && npm test",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
     "babel-preset-minify": "^0.5.2",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "mocha": "^10.2.0"
   }
