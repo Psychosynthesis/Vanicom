@@ -6,6 +6,7 @@
 
 .editorconfig
 
+/source/
 /scripts/
 /test/
 babel.config.js
