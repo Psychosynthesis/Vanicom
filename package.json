@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha --require ./test/setup.js",
     "build": "node scripts/clean.js && node scripts/build.js && npm test",
-    "prepare": "git config core.hooksPath ./hooks || echo 'Not in a git repo'"
+    "prepare": "git config core.hooksPath ./.hooks || echo 'Not in a git repo'"
   },
   "repository": {
     "type": "git",
