@@ -77,6 +77,13 @@ export const capz = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+// Вернёт время в формате 22:34
+export const getTime = (date) => {
+	const sourceTime = (!date) ? new Date() : new Date(date);
+  return sourceTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+};
+
+
 export const getRandomString = (length) => {
 	if (length && typeof(length) !== "number") throw new Error("The length of the string, if specified, must be a positive number!");
 	const lengthToGenerate = length ? length : 5;

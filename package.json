@@ -1,13 +1,13 @@
 {
   "name": "vanicom",
-  "version": "1.3.3",
+  "version": "1.3.5",
   "description": "Most used vanilla js features for simple interfaces",
   "main": "build/index.js",
   "types": "types.d.ts",
   "scripts": {
     "test": "mocha --require ./test/setup.js",
     "build": "node scripts/clean.js && node scripts/build.js && npm test",
-    "prepare": "husky"
+    "prepare": "git config core.hooksPath ./.hooks || echo 'Not in a git repo'"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,9 @@
   },
   "keywords": [
     "vanillajs",
+    "commons",
     "helpers",
+    "utils",
     "vanicom"
   ],
   "author": "Nick G.",
@@ -25,11 +27,10 @@
   },
   "homepage": "https://github.com/Psychosynthesis/Vanicom#readme",
   "devDependencies": {
-    "@babel/cli": "^7.22.9",
-    "@babel/core": "^7.22.9",
-    "@babel/preset-env": "^7.22.9",
+    "@babel/cli": "^7.28.x",
+    "@babel/core": "^7.28.x",
+    "@babel/preset-env": "^7.28.x",
     "babel-preset-minify": "^0.5.2",
-    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "mocha": "^10.2.0"
   }

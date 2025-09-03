@@ -18,6 +18,9 @@ declare interface ForEachKeyFunction {
   <T extends object>(obj: T, fn: (key: keyof T, value: T[keyof T], obj: T) => void, scope?: any): void;
 }
 
+
+export const getTime: (date?: string | Date | number) => string; // Get time from timestamp (22:34) or current time
+
 export const isString: ObjectCheckingType;
 export const isObject: ObjectCheckingType;
 export const isExistAndNotNull: ObjectCheckingType;

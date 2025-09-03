@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isTestEnv = exports.isString = exports.isObject = exports.isNumber = exports.isNode = exports.isExistAndNotNull = exports.hideToast = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
+exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isTestEnv = exports.isString = exports.isObject = exports.isNumber = exports.isNode = exports.isExistAndNotNull = exports.hideToast = exports.getTime = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -11,45 +11,38 @@ exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = ex
 // https://github.com/Psychosynthesis/Vanicom
 /////////////////////////////////////////////////////////////////////////////////////////
 
-var DEF_TOAST_CLASSNAME = 'vanic-toast-container';
-exports.DEF_TOAST_CLASSNAME = DEF_TOAST_CLASSNAME;
-var logg = console.log; // :)
-exports.logg = logg;
-var isString = function isString(variable) {
+var DEF_TOAST_CLASSNAME = exports.DEF_TOAST_CLASSNAME = 'vanic-toast-container';
+var logg = exports.logg = console.log; // :)
+
+var isString = exports.isString = function isString(variable) {
   return typeof variable === "string";
 };
-exports.isString = isString;
-var isNumber = function isNumber(n) {
+var isNumber = exports.isNumber = function isNumber(n) {
   return !(typeof n === "bigint") && !isString(n) &&
   // To detect number in quotes like '11243'
   !isNaN(parseFloat(n)) && !isNaN(n - 0);
 };
-exports.isNumber = isNumber;
-var isObject = function isObject(value) {
+var isObject = exports.isObject = function isObject(value) {
   if (Array.isArray(value)) return false;
   var val_type = typeof value;
   return value !== null && val_type === 'object';
 };
-exports.isObject = isObject;
-var isExistAndNotNull = function isExistAndNotNull(val) {
+var isExistAndNotNull = exports.isExistAndNotNull = function isExistAndNotNull(val) {
   return !(typeof val === "undefined" || val === null);
 };
-exports.isExistAndNotNull = isExistAndNotNull;
-var isNode = function isNode() {
+var isNode = exports.isNode = function isNode() {
   return (
     // Are we running in NodeJS?
     typeof process !== 'undefined' && process.versions != null && process.versions.node != null
   );
 };
-exports.isNode = isNode;
-var isTestEnv = function isTestEnv() {
+var isTestEnv = exports.isTestEnv = function isTestEnv() {
   return (
     // Need for testing with Mocha
     isNode() && document.IS_MOCHA_TEST
   );
 };
-exports.isTestEnv = isTestEnv;
-var getRandomNum = function getRandomNum() {
+var getRandomNum = exports.getRandomNum = function getRandomNum() {
   // Must be a not an arrow function to use arguments object
   var min = arguments.length >= 1 ? arguments[0] : 0;
   var max = arguments.length == 2 ? arguments[1] : 100000000;
@@ -58,8 +51,7 @@ var getRandomNum = function getRandomNum() {
   }
   return Math.floor(Math.random() * (max - min) + min);
 };
-exports.getRandomNum = getRandomNum;
-var roundNumber = function roundNumber(num, precision) {
+var roundNumber = exports.roundNumber = function roundNumber(num, precision) {
   if (typeof num !== 'number') {
     throw new Error("First argument must be a number");
   }
@@ -67,8 +59,7 @@ var roundNumber = function roundNumber(num, precision) {
   var castedPrecision = typeof precision === 'number' ? precision : 1;
   return Math.round(num * Math.pow(10, castedPrecision)) / Math.pow(10, castedPrecision);
 };
-exports.roundNumber = roundNumber;
-var forEach = function forEach(list, fn, scope) {
+var forEach = exports.forEach = function forEach(list, fn, scope) {
   if (!Array.isArray(list)) {
     throw new Error("First argument must be an array");
   }
@@ -81,8 +72,7 @@ var forEach = function forEach(list, fn, scope) {
     fn.call(scope, list[i], i, list);
   }
 };
-exports.forEach = forEach;
-var forEachKey = function forEachKey(obj, fn, scope) {
+var forEachKey = exports.forEachKey = function forEachKey(obj, fn, scope) {
   if (!isObject(obj)) {
     throw new Error("First argument must be a non-null object");
   }
@@ -99,8 +89,7 @@ var forEachKey = function forEachKey(obj, fn, scope) {
 };
 
 // Вырезаем BOM и любые скрытые пробелы из начала и конца строки
-exports.forEachKey = forEachKey;
-var trim = function trim(str) {
+var trim = exports.trim = function trim(str) {
   if (typeof str !== 'string') {
     throw new Error("Trim work only for strings");
   }
@@ -109,21 +98,27 @@ var trim = function trim(str) {
 };
 
 // Вырезаем вообще все лишние пробелы
-exports.trim = trim;
-var trimAllSpaces = function trimAllSpaces(str) {
+var trimAllSpaces = exports.trimAllSpaces = function trimAllSpaces(str) {
   if (typeof str !== 'string') {
     throw new Error("Trim work only for strings");
   }
   ;
   return str.replace(/[\s\uFEFF\u2000-\u200f]/g, '');
 };
-exports.trimAllSpaces = trimAllSpaces;
-var capz = function capz(str) {
+var capz = exports.capz = function capz(str) {
   if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-exports.capz = capz;
-var getRandomString = function getRandomString(length) {
+
+// Вернёт время в формате 22:34
+var getTime = exports.getTime = function getTime(date) {
+  var sourceTime = !date ? new Date() : new Date(date);
+  return sourceTime.toLocaleTimeString('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+var getRandomString = exports.getRandomString = function getRandomString(length) {
   if (length && typeof length !== "number") throw new Error("The length of the string, if specified, must be a positive number!");
   var lengthToGenerate = length ? length : 5;
   var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'z', 'q', 'w', 'x', 'v', 'k', 'b'];
@@ -137,8 +132,7 @@ var getRandomString = function getRandomString(length) {
   }
   return lol_random;
 };
-exports.getRandomString = getRandomString;
-var deleteNode = function deleteNode(node_to_delete) {
+var deleteNode = exports.deleteNode = function deleteNode(node_to_delete) {
   if (isNode() && !isTestEnv()) {
     console.log('DOM manipulations works only in browser');
     return;
@@ -147,12 +141,10 @@ var deleteNode = function deleteNode(node_to_delete) {
     node_to_delete.parentNode.removeChild(node_to_delete);
   }
 };
-exports.deleteNode = deleteNode;
-var getEventTarget = function getEventTarget(eve) {
+var getEventTarget = exports.getEventTarget = function getEventTarget(eve) {
   return eve.target || eve.currentTarget;
 };
-exports.getEventTarget = getEventTarget;
-var getCookie = function getCookie(name) {
+var getCookie = exports.getCookie = function getCookie(name) {
   if (isNode() && !isTestEnv()) {
     console.log('Cookies works only in browser');
     return;
@@ -174,8 +166,7 @@ var getCookie = function getCookie(name) {
   }
   return wanted_cookie;
 };
-exports.getCookie = getCookie;
-var setCookie = function setCookie(name, value, lifetime) {
+var setCookie = exports.setCookie = function setCookie(name, value, lifetime) {
   if (isNode() && !isTestEnv()) {
     console.log('Cookies works only in browser');
     return;
@@ -183,8 +174,7 @@ var setCookie = function setCookie(name, value, lifetime) {
   var default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
   document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
-exports.setCookie = setCookie;
-var setLocalItem = function setLocalItem(key, value, exp) {
+var setLocalItem = exports.setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
   // exp - сколько времени ключ будет валиден в мс
   var item = {
@@ -193,8 +183,7 @@ var setLocalItem = function setLocalItem(key, value, exp) {
   };
   localStorage.setItem(key, JSON.stringify(item));
 };
-exports.setLocalItem = setLocalItem;
-var getLocalItem = function getLocalItem(key) {
+var getLocalItem = exports.getLocalItem = function getLocalItem(key) {
   // Getting values with expiry date from LocalStorage that stored with `setLocalItem`.
   var itemStr = localStorage.getItem(key);
   if (!itemStr) {
@@ -215,8 +204,7 @@ var getLocalItem = function getLocalItem(key) {
 };
 
 // Супер-простое всплывающее сообщение пользователю
-exports.getLocalItem = getLocalItem;
-var toast = function toast(params) {
+var toast = exports.toast = function toast(params) {
   if (isNode() && !isTestEnv()) {
     console.log('Toast works only in browser');
     return;
@@ -260,15 +248,14 @@ var toast = function toast(params) {
     }
     document.body.append(container);
     if (isExistAndNotNull(duration) && duration > 0) {
-      setTimeout(hideToast, duration > 0 ? duration : 3000);
+      setTimeout(_hideToast, duration > 0 ? duration : 3000);
     }
   } else {
     container = existContainer[0];
   }
   container.append(messageDiv);
 };
-exports.toast = toast;
-var hideToast = function hideToast() {
+var _hideToast = exports.hideToast = function hideToast() {
   if (isNode() && !isTestEnv()) {
     console.log('Toast works only in browser');
     return;
@@ -280,9 +267,8 @@ var hideToast = function hideToast() {
   var toastsMessages = checkContainer.getElementsByClassName('toast-message');
   if (toastsMessages.length > 1) {
     checkContainer.removeChild(toastsMessages[toastsMessages.length - 1]);
-    setTimeout(hideToast, 3000);
+    setTimeout(_hideToast, 3000);
   } else {
     deleteNode(checkContainer);
   }
 };
-exports.hideToast = hideToast;
