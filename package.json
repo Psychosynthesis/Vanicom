@@ -18,7 +18,8 @@
     "commons",
     "helpers",
     "utils",
-    "vanicom"
+    "vanicom",
+    "runtime typecheck"
   ],
   "author": "Nick G.",
   "license": "MIT",

@@ -23,6 +23,7 @@ export const getTime: (date?: string | Date | number) => string; // Get time fro
 
 export const isString: ObjectCheckingType;
 export const isObject: ObjectCheckingType;
+export const isNumber: ObjectCheckingType;
 export const isExistAndNotNull: ObjectCheckingType;
 
 export const getRandomNum: GetRandomNumType;
@@ -41,8 +42,8 @@ export const getCookie: StringHelperType;
 export const getEventTarget: EventGetter;
 export const deleteNode: DOMNodeInput;
 
-export const HideToast: VoidFunc;
-export const Toast: (parms: ToastParams) => void;
+export const hideToast: VoidFunc;
+export const toast: (parms: ToastParams) => void;
 
 export declare const setCookie: (
   name: string,
