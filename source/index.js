@@ -77,7 +77,7 @@ export const capz = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-// Вернёт время в формате 22:34
+// Вернёт время в формате 22:34 в UTC+0
 export const getTime = (date) => {
 	const sourceTime = (!date) ? new Date() : new Date(date);
   return sourceTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });

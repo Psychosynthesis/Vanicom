@@ -113,6 +113,11 @@ capz('capzed'); // return 'Capzed'
 getRandomString(5);
 ```
 
+**Get UTC+0 time from timestamp, or just get current time**
+```JS
+getTime(); // return current time like 11:00
+getTime(1756868860320); // 03:07
+```
 
 **DOM helpers:**
 ```JS
@@ -297,6 +302,12 @@ capz('capzed'); // return 'Capzed'
 **Получить случайную строку указанной длины. Аргумент может быть опущен, по дефолту вернёт строку длинной 5:**
 ```JS
 getRandomString(5);
+```
+
+**Получить время в UTC+0 из даты или timestamp, либо просто текущее время**
+```JS
+getTime(); // вернёт текущее время в формате 11:00
+getTime(1756868860320); // 03:07
 ```
 
 
