@@ -119,6 +119,18 @@ getTime(); // return current time like 11:00
 getTime(1756868860320); // 03:07
 ```
 
+**Get time with date from timestamp, or get current time with date**
+It can also slightly change the date format.
+```JS
+getDateTime(); // return current time like 11:00 (18.12.25)
+
+getDateTime(null, { shortYear: false, dateSeparator: '/' }); // 22:10 (24/12/2025)
+
+getDateTime(1756868860320, { shortYear: false, dateSeparator: '/' }); // 03:07 (03/09/2025)
+
+getDateTime(null, { showYear: false, dateSeparator: '-' }); // 13:30 (15-10)
+```
+
 **DOM helpers:**
 ```JS
 deleteNode(document.getElementById("test")); // Before deleting, it checks whether it has a parent and whether the node itself exists.
@@ -308,6 +320,18 @@ getRandomString(5);
 ```JS
 getTime(); // вернёт текущее время в формате 11:00
 getTime(1756868860320); // 03:07
+```
+
+**Получить время и дату из временной метки или получить текущее время и дату.**
+Также можно немного изменить формат даты.
+```JS
+getDateTime(); // return current time like 11:00 (18.12.25)
+
+getDateTime(null, { shortYear: false, dateSeparator: '/' }); // 22:10 (24/12/2025)
+
+getDateTime(1756868860320, { shortYear: false, dateSeparator: '/' }); // 03:07 (03/09/2025)
+
+getDateTime(null, { showYear: false, dateSeparator: '-' }); // 13:30 (15-10)
 ```
 
 

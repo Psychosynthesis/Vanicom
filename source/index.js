@@ -72,6 +72,7 @@ export const trimAllSpaces = (str) => {
 	return str.replace(/[\s\uFEFF\u2000-\u200f]/g, '');
 };
 
+// Сделает первый символ строки заглавным
 export const capz = (str) => {
   if (typeof(str) !== "string") throw new Error("Input for capitalize must be a String!");
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -79,8 +80,40 @@ export const capz = (str) => {
 
 // Вернёт время в формате 22:34 в UTC+0
 export const getTime = (date) => {
-	const sourceTime = (!date) ? new Date() : new Date(date);
-  return sourceTime.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  const stampForCast = !date ? new Date().getTime() : date;
+  const castedDate = new Date(stampForCast);
+
+  if (isNaN(castedDate.getTime())) {
+    throw new Error("Invalid date passed to getTime");
+  }
+
+  return castedDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+};
+
+// Вернёт дату в формате 22:10 (21.01.2025), либо в заданном формате
+export const getDateTime = (date, options = {}) => {
+  const {
+    showYear = true,
+		shortYear = true, // true -> 25, false -> 2025
+    dateSeparator = '.'
+  } = options;
+
+  const stampForCast = !date ? new Date().getTime() : date;
+  const castedDate = new Date(stampForCast);
+
+  if (isNaN(castedDate.getTime())) {
+    throw new Error("Invalid date passed to getDateTime");
+  }
+
+  const time = getTime(stampForCast);
+  const day = castedDate.getDate().toString().padStart(2, '0');
+  const month = (castedDate.getMonth() + 1).toString().padStart(2, '0');
+
+  const dateParts = [day, month];
+	const fullYear = castedDate.getFullYear().toString();
+	if (showYear) dateParts.push(shortYear ? fullYear.slice(-2) : fullYear);
+
+  return `${time} (${dateParts.join(dateSeparator)})`;
 };
 
 
@@ -114,20 +147,25 @@ export const getCookie = (name) => {
 		console.log('Cookies works only in browser');
 		return;
 	}
-  const cookie = document.cookie;
-  const search = name + "=";
-  let wanted_cookie = '';
-  let end = 0;
-  if (cookie.length > 0) {
-			let offset = cookie.search(new RegExp(`\\b${search}\\b`));
-      if (offset > -1) {
-          offset += search.length;
-          end = cookie.indexOf(";", offset);
-          if (end === -1) { end = cookie.length; }
-          wanted_cookie = unescape(cookie.substring(offset, end));
-      }
-  }
-  return(wanted_cookie);
+
+	if (!isString(name)) {
+		throw new Error("Cookie name must be a string");
+	}
+
+	const cookie = document.cookie;
+	const search = name + "=";
+	let wanted_cookie = '';
+
+	if (cookie.length > 0) {
+		let offset = cookie.search(new RegExp(`\\b${search}\\b`));
+		if (offset > -1) {
+			offset += search.length;
+			let end = cookie.indexOf(";", offset);
+			if (end === -1) { end = cookie.length; }
+			wanted_cookie = decodeURIComponent(cookie.substring(offset, end));
+		}
+	}
+	return wanted_cookie;
 };
 
 export const setCookie = (name, value, lifetime) => {
@@ -136,7 +174,7 @@ export const setCookie = (name, value, lifetime) => {
 		return;
 	}
   const default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
-  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
+	document.cookie = name + "=" + encodeURIComponent(value) + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
 
 export const setLocalItem = (key, value, exp) => { // Caching values with expiry date to the LocalStorage.

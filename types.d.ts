@@ -19,7 +19,9 @@ declare interface ForEachKeyFunction {
 }
 
 
+export interface DateTimeOptions { showYear?: boolean; shortYear?: boolean; dateSeparator?: string; }
 export const getTime: (date?: string | Date | number) => string; // Get time from timestamp (22:34) or current time
+export const getDateTime: (date?: string | Date | number, options?: DateTimeOptions) => string;
 
 export const isString: ObjectCheckingType;
 export const isObject: ObjectCheckingType;

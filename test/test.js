@@ -598,3 +598,117 @@ describe('Toast testing', () => {
 });
 
 //////////////////////////////////////////////////////////////////////////
+
+describe('getTime testing', () => {
+  describe('Get current time without arguments', function () {
+    it('should return string in format HH:MM when called without args', function () {
+      const time = Vanic.getTime();
+      assert.equal(typeof time, "string");
+      assert.match(time, /^\d{2}:\d{2}$/);
+    });
+  });
+
+  describe('Get time from Date object', function () {
+    it('should return correct time from Date object', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      assert.equal(Vanic.getTime(testDate), "22:10");
+    });
+  });
+
+  describe('Get time from timestamp', function () {
+    it('should return correct time from timestamp', function () {
+      const timestamp = new Date('2025-12-24T15:30:00').getTime();
+      assert.equal(Vanic.getTime(timestamp), "15:30");
+    });
+  });
+
+  describe('Get time from string', function () {
+    it('should return correct time from ISO string', function () {
+      assert.equal(Vanic.getTime('2025-12-24T08:45:00'), "08:45");
+    });
+  });
+
+  describe('Handle invalid date', function () {
+    it('should throw error for invalid date', function () {
+      assert.throws(
+        () => Vanic.getTime('invalid date'),
+        /Invalid date passed to getTime/
+      );
+    });
+  });
+
+  describe('Handle null and undefined', function () {
+    it('should handle null as current time', function () {
+      const time = Vanic.getTime(null);
+      assert.match(time, /^\d{2}:\d{2}$/);
+    });
+
+    it('should handle undefined as current time', function () {
+      const time = Vanic.getTime(undefined);
+      assert.match(time, /^\d{2}:\d{2}$/);
+    });
+  });
+});
+
+//////////////////////////////////////////////////////////////////////////
+
+describe('getDateTime testing', () => {
+  describe('Get datetime with default options', function () {
+    it('should return time and date in short format', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      assert.equal(Vanic.getDateTime(testDate), "22:10 (24.12.25)");
+    });
+  });
+
+  describe('Get datetime without year', function () {
+    it('should return time and date without year', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      assert.equal(Vanic.getDateTime(testDate, { showYear: false }), "22:10 (24.12)");
+    });
+  });
+
+  describe('Get datetime with full year', function () {
+    it('should return time and date with full year', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      assert.equal(Vanic.getDateTime(testDate, { shortYear: false }), "22:10 (24.12.2025)");
+    });
+  });
+
+  describe('Get datetime with custom separator', function () {
+    it('should return datetime with custom date separator', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      assert.equal(Vanic.getDateTime(testDate, { dateSeparator: '-' }), "22:10 (24-12-25)");
+    });
+  });
+
+  describe('Get datetime with multiple options', function () {
+    it('should handle multiple options together', function () {
+      const testDate = new Date('2025-12-24T22:10:00');
+      const result = Vanic.getDateTime(testDate, { shortYear: false, dateSeparator: '/' });
+      assert.equal(result, "22:10 (24/12/2025)");
+    });
+  });
+
+  describe('Handle invalid date in getDateTime', function () {
+    it('should throw error for invalid date', function () {
+      assert.throws(
+        () => Vanic.getDateTime('invalid date'),
+        /Invalid date passed to getDateTime/
+      );
+    });
+  });
+
+  describe('Handle edge cases in date formatting', function () {
+    it('should pad single digit day and month with zeros', function () {
+      const testDate = new Date('2025-01-05T09:05:00');
+      assert.equal(Vanic.getDateTime(testDate), "09:05 (05.01.25)");
+    });
+  });
+
+  describe('Get current datetime without arguments', function () {
+    it('should return current datetime when called without args', function () {
+      const datetime = Vanic.getDateTime();
+      assert.match(datetime, /^\d{2}:\d{2} \(\d{2}\.\d{2}\.\d{2}\)$/);
+    });
+  });
+});

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isTestEnv = exports.isString = exports.isObject = exports.isNumber = exports.isNode = exports.isExistAndNotNull = exports.hideToast = exports.getTime = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
+exports.trimAllSpaces = exports.trim = exports.toast = exports.setLocalItem = exports.setCookie = exports.roundNumber = exports.logg = exports.isTestEnv = exports.isString = exports.isObject = exports.isNumber = exports.isNode = exports.isExistAndNotNull = exports.hideToast = exports.getTime = exports.getRandomString = exports.getRandomNum = exports.getLocalItem = exports.getEventTarget = exports.getDateTime = exports.getCookie = exports.forEachKey = exports.forEach = exports.deleteNode = exports.capz = exports.DEF_TOAST_CLASSNAME = void 0;
 // Vanicom.js - микрофреймворк с наиболее востребованными функциями,
 // так или иначе используемыми в большинстве современных UI.
 // Библиотека обеспечивает работу в браузерах не ниже IE9.
@@ -105,18 +105,47 @@ var trimAllSpaces = exports.trimAllSpaces = function trimAllSpaces(str) {
   ;
   return str.replace(/[\s\uFEFF\u2000-\u200f]/g, '');
 };
+
+// Сделает первый символ строки заглавным
 var capz = exports.capz = function capz(str) {
   if (typeof str !== "string") throw new Error("Input for capitalize must be a String!");
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-// Вернёт время в формате 22:34
+// Вернёт время в формате 22:34 в UTC+0
 var getTime = exports.getTime = function getTime(date) {
-  var sourceTime = !date ? new Date() : new Date(date);
-  return sourceTime.toLocaleTimeString('ru-RU', {
+  var stampForCast = !date ? new Date().getTime() : date;
+  var castedDate = new Date(stampForCast);
+  if (isNaN(castedDate.getTime())) {
+    throw new Error("Invalid date passed to getTime");
+  }
+  return castedDate.toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit'
   });
+};
+
+// Вернёт дату в формате 22:10 (21.01.2025), либо в заданном формате
+var getDateTime = exports.getDateTime = function getDateTime(date) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _options$showYear = options.showYear,
+    showYear = _options$showYear === void 0 ? true : _options$showYear,
+    _options$shortYear = options.shortYear,
+    shortYear = _options$shortYear === void 0 ? true : _options$shortYear,
+    _options$dateSeparato = options.dateSeparator,
+    dateSeparator = _options$dateSeparato === void 0 ? '.' : _options$dateSeparato;
+  var stampForCast = !date ? new Date().getTime() : date;
+  var castedDate = new Date(stampForCast);
+  if (isNaN(castedDate.getTime())) {
+    throw new Error("Invalid date passed to getDateTime");
+  }
+  var time = getTime(stampForCast);
+  var day = castedDate.getDate().toString().padStart(2, '0');
+  var month = (castedDate.getMonth() + 1).toString().padStart(2, '0');
+  var dateParts = [day, month];
+  var fullYear = castedDate.getFullYear().toString();
+  if (showYear) dateParts.push(shortYear ? fullYear.slice(-2) : fullYear);
+  return "".concat(time, " (").concat(dateParts.join(dateSeparator), ")");
 };
 var getRandomString = exports.getRandomString = function getRandomString(length) {
   if (length && typeof length !== "number") throw new Error("The length of the string, if specified, must be a positive number!");
@@ -149,19 +178,21 @@ var getCookie = exports.getCookie = function getCookie(name) {
     console.log('Cookies works only in browser');
     return;
   }
+  if (!isString(name)) {
+    throw new Error("Cookie name must be a string");
+  }
   var cookie = document.cookie;
   var search = name + "=";
   var wanted_cookie = '';
-  var end = 0;
   if (cookie.length > 0) {
     var offset = cookie.search(new RegExp("\\b".concat(search, "\\b")));
     if (offset > -1) {
       offset += search.length;
-      end = cookie.indexOf(";", offset);
+      var end = cookie.indexOf(";", offset);
       if (end === -1) {
         end = cookie.length;
       }
-      wanted_cookie = unescape(cookie.substring(offset, end));
+      wanted_cookie = decodeURIComponent(cookie.substring(offset, end));
     }
   }
   return wanted_cookie;
@@ -172,7 +203,7 @@ var setCookie = exports.setCookie = function setCookie(name, value, lifetime) {
     return;
   }
   var default_max_age = isExistAndNotNull(lifetime) ? lifetime : 31536000; // Время жизни куки в sec (31536000 - год)
-  document.cookie = name + "=" + value + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
+  document.cookie = name + "=" + encodeURIComponent(value) + "; max-age=" + default_max_age + "; path=/; SameSite=Strict;";
 };
 var setLocalItem = exports.setLocalItem = function setLocalItem(key, value, exp) {
   // Caching values with expiry date to the LocalStorage.
