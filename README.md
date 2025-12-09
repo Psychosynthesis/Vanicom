@@ -1,6 +1,6 @@
 # Vanicom.js
 [![npm version](https://img.shields.io/npm/v/vanicom?color=%23047dec)](https://www.npmjs.org/package/vanicom)
-
+[![release build](https://img.shields.io/github/release/Psychosynthesis/vanicom.svg)](https://github.com/Psychosynthesis/Vanicom/releases)
 
 ## Introductory
 Vanicom (vanilla commons) is a microframework that was conceived as a library
